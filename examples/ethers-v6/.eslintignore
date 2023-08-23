@@ -1,0 +1,10 @@
+# directories
+**/.next
+**/build
+**/dist
+**/lib
+**/node_modules
+
+# files
+./next.config.js
+yarn.lock

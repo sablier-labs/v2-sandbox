@@ -1,0 +1,21 @@
+{
+  "name": "@sablier/v2-sandbox",
+  "description": "A collection of end-to-end integration examples using Sablier V2",
+  "version": "1.0.0",
+  "author": {
+    "name": "Sablier Labs Ltd",
+    "url": "https://sablier.com"
+  },
+  "bugs": {
+    "url": "https://github.com/sablier-labs/v2-sandbox/issues"
+  },
+  "devDependencies": {},
+  "homepage": "https://github.com/sablier-labs/v2-sandbox#readme",
+  "license": "LGPL-3.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sablier-labs/v2-sandbox.git"
+  },
+  "scripts": {}
+}
