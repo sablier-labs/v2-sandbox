@@ -8,7 +8,7 @@ import {
   Duration,
 } from "./fields";
 import { useCallback } from "react";
-import Transaction from "../../../model/Transaction";
+import Transaction from "../../../models/Transaction";
 import { useWeb3Context } from "../../Web3";
 import useStoreForm, { prefill } from "./store";
 import _ from "lodash";

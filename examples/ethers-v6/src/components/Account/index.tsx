@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useWeb3Context } from "../Web3";
 import { useCallback } from "react";
-import Transaction from "../../model/Transaction";
+import Transaction from "../../models/Transaction";
 
 const Wrapper = styled.div`
   display: flex;

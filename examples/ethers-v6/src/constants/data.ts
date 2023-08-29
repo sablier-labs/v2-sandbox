@@ -3,7 +3,7 @@ import type {
   ICreateWithDurations,
   ICreateWithDeltas,
   ICreateWithMilestones,
-} from "../../../types";
+} from "../types";
 
 const now = BigInt(new Date().valueOf().toString().slice(0, -3));
 

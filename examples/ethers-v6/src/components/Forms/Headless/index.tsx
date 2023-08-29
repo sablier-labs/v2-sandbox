@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Transaction from "../../../model/Transaction";
+import Transaction from "../../../models/Transaction";
 import { useWeb3Context } from "../../Web3";
 import { useCallback } from "react";
 import _ from "lodash";
@@ -10,7 +10,7 @@ import {
   LOCKUP_LINEAR_WITH_RANGE,
   LOCKUP_DYNAMIC_WITH_DELTAS,
   LOCKUP_DYNAMIC_WITH_MILESTONES,
-} from "./data";
+} from "../../../constants/data";
 
 const Wrapper = styled.div`
   display: grid;
