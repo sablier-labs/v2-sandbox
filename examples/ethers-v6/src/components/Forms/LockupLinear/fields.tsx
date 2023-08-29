@@ -4,6 +4,7 @@ import type { ChangeEvent } from "react";
 import Input from "../../Input";
 import Select from "../../Select";
 import useFormStore from "./store";
+import { REGEX_ADDRESS, REGEX_FLOAT, REGEX_INTEGER } from "../../../constants";
 
 export function Cancelability() {
   const { cancelability, update } = useFormStore((state) => ({
@@ -14,8 +15,6 @@ export function Cancelability() {
   const onChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       const value = (() => {
-        console.log(e);
-
         const input = e.target.value;
 
         return ["true", true].includes(input);
@@ -89,7 +88,7 @@ export function Amount() {
         return _.toString(input);
       })();
 
-      if (value !== "" && !new RegExp(/^[0-9.,]+$/).test(value)) {
+      if (value !== "" && !new RegExp(REGEX_FLOAT).test(value)) {
         return;
       }
 
@@ -131,7 +130,7 @@ export function Recipient() {
         return _.toString(input);
       })();
 
-      if (value !== "" && !new RegExp(/^[0-9xXAaBbCcDdEeFf]+$/).test(value)) {
+      if (value !== "" && !new RegExp(REGEX_ADDRESS).test(value)) {
         return;
       }
 
@@ -168,7 +167,7 @@ export function Duration() {
         return _.toString(input);
       })();
 
-      if (value !== "" && !new RegExp(/^[0-9]+$/).test(value)) {
+      if (value !== "" && !new RegExp(REGEX_INTEGER).test(value)) {
         return;
       }
 
@@ -205,7 +204,7 @@ export function Cliff() {
         return _.toString(input);
       })();
 
-      if (value !== "" && !new RegExp(/^[0-9]+$/).test(value)) {
+      if (value !== "" && !new RegExp(REGEX_INTEGER).test(value)) {
         return;
       }
 

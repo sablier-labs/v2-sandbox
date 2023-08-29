@@ -2,13 +2,13 @@ import styled from "styled-components";
 import { useWeb3Context } from "../Web3";
 import { useState } from "react";
 import LockupLinear from "./LockupLinear";
+import LockupDynamic from "./LockupDynamic";
+import Headless from "./Headless";
 
 const Wrapper = styled.div`
   display: flex;
-  max-width: 660px;
   flex-direction: column;
   gap: 16px;
-
   width: 100%;
   border-radius: 6px;
   border: 1px solid ${(props) => props.theme.colors.gray};
@@ -83,8 +83,13 @@ function Forms() {
         <Tab data-active={tab === 1} onClick={() => setTab(1)}>
           <p>Lockup Dynamic</p>
         </Tab>
+        <Tab data-active={tab === 2} onClick={() => setTab(2)}>
+          <p>Headless</p>
+        </Tab>
       </Tabs>
       {tab === 0 ? <LockupLinear /> : false}
+      {tab === 1 ? <LockupDynamic /> : false}
+      {tab === 2 ? <Headless /> : false}
     </Wrapper>
   );
 }

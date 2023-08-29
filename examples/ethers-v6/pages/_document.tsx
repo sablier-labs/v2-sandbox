@@ -13,9 +13,7 @@ import "../src/types";
 const Document = () => {
   return (
     <Html>
-      <Head>
-        <title>Sablier V2 Sandbox | Ethers v6</title>
-      </Head>
+      <Head />
       <body>
         <Main />
         <NextScript />

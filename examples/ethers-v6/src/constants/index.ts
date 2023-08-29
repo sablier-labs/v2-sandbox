@@ -20,6 +20,10 @@ export const contracts = {
   },
 };
 
+export const REGEX_ADDRESS = /^[0-9xXAaBbCcDdEeFf]+$/;
+export const REGEX_FLOAT = /^[0-9]+[.,]?[0-9]+?$/;
+export const REGEX_INTEGER = /^[0-9]+$/;
+
 export const ERC20 = {
   abi: [
     {
@@ -236,6 +240,24 @@ export const ERC20 = {
       ],
       name: "Transfer",
       type: "event",
+    },
+    /** Special method only available in our special Goerli DAI */
+    {
+      constant: false,
+      inputs: [
+        {
+          name: "beneficiary",
+          type: "address",
+        },
+        {
+          name: "mintAmount",
+          type: "uint256",
+        },
+      ],
+      name: "mint",
+      payable: false,
+      stateMutability: "nonpayable",
+      type: "function",
     },
   ],
 } as const;

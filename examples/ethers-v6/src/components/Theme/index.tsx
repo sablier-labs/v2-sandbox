@@ -4,7 +4,7 @@ import {
   createGlobalStyle,
 } from "styled-components";
 import { normalize } from "styled-normalize";
-import { Roboto_Mono, Urbanist } from "next/font/google";
+import { Urbanist } from "next/font/google";
 
 const urbanist = Urbanist({
   subsets: ["latin"],

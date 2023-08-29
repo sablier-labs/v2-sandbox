@@ -1,17 +1,11 @@
 import styled from "styled-components";
-import {
-  Amount,
-  Cancelability,
-  Cliff,
-  Token,
-  Recipient,
-  Duration,
-} from "./fields";
+import { Cancelability, Segments, Token, Recipient } from "./fields";
 import { useCallback } from "react";
 import Transaction from "../../../model/Transaction";
 import { useWeb3Context } from "../../Web3";
 import useStoreForm, { prefill } from "./store";
 import _ from "lodash";
+import { ethers } from "ethers";
 
 const Wrapper = styled.div`
   display: flex;
@@ -73,7 +67,7 @@ const Actions = styled.div`
   }
 `;
 
-function LockupLinear() {
+function LockupDynamic() {
   const { signer } = useWeb3Context();
   const { error, logs, update } = useStoreForm((state) => ({
     error: state.error,
@@ -87,8 +81,11 @@ function LockupLinear() {
         state.api.update({ error: undefined });
         await Transaction.doApprove(
           signer,
-          "SablierV2LockupLinear",
-          state,
+          "SablierV2LockupDynamic",
+          {
+            amount: (ethers.MaxUint256 / 10n ** 18n).toString(),
+            token: state.token,
+          },
           state.api.log
         );
       } catch (error) {
@@ -102,7 +99,7 @@ function LockupLinear() {
       const state = useStoreForm.getState();
       try {
         state.api.update({ error: undefined });
-        await Transaction.doCreateLinear(signer, state, state.api.log);
+        await Transaction.doCreateDynamic(signer, state, state.api.log);
       } catch (error) {
         state.api.update({ error: _.toString(error) });
       }
@@ -113,18 +110,29 @@ function LockupLinear() {
     update(prefill);
   }, [update]);
 
+  const onAdd = useCallback(() => {
+    const state = useStoreForm.getState();
+    const segments = _.clone(state.segments);
+    update({
+      segments: [
+        ...segments,
+        { amount: undefined, delta: undefined, exponent: undefined },
+      ],
+    });
+  }, [update]);
+
   return (
     <Wrapper>
       <Cancelability />
       <Token />
-      <Amount />
+
       <Recipient />
-      <Duration />
       <Divider />
-      <Cliff />
+      <Segments />
       <Divider />
       <Actions>
         <Button onClick={onPrefill}>Prefill form</Button>
+        <Button onClick={onAdd}>Add segment</Button>
         <div />
         <Button onClick={onApprove}>Approve token spending</Button>
         <Button onClick={onCreate}>Create stream</Button>
@@ -149,4 +157,4 @@ function LockupLinear() {
   );
 }
 
-export default LockupLinear;
+export default LockupDynamic;

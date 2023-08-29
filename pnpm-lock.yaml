@@ -19,6 +19,9 @@ importers:
       '@sablier/v2-core':
         specifier: ^1.0.2
         version: 1.0.2(@openzeppelin/contracts@4.9.3)(@prb/math@4.0.1)
+      bignumber.js:
+        specifier: ^9.1.2
+        version: 9.1.2
       cross-fetch:
         specifier: ^4.0.0
         version: 4.0.0
@@ -1974,6 +1977,10 @@ packages:
 
   /balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
+
+  /bignumber.js@9.1.2:
+    resolution: {integrity: sha512-2/mKyZH9K85bzOEfhXDBFZTGd1CTs+5IHpeFQo9luiBG7hghdC851Pj2WAhb6E3R6b9tZj/XKhbg4fum+Kepug==}
+    dev: false
 
   /binary-extensions@2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
