@@ -2,17 +2,27 @@
 
 Front-end sandbox development environments for Sablier V2.
 
-## Examples / Ethers V6
+## Background
 
-This sandbox environment showcases a frontend integration with the [Sablier V2](https://docs.sablier.com) **Core** contracts through [Ethers V6](https://docs.ethers.org/v6/). The small app will require a wallet connection (Injected / Metamask) to be established, using Goerli as a playground.
+Sablier is a smart contract protocol that enables trustless streaming of ERC-20 assets, which means
+the ability to make payments by the second.
+
+There are two types of streaming models in Sablier:
+
+- **LockupLinear**, abbreviated as **LL**, which creates streams with linear streaming functions
+- **LockupDynamic**, abbreviated as **LD**, which creates streams with dynamic streaming functions (examples: exponentials, logarithms, step functions)
+
+For more information, please refer to our [documentation](https://docs.sablier.com).
+
+## Ethers V6
+
+An integration of the [Sablier V2 Core](https://github.com/sablier-labs/v2-core) contracts into a frontend environment that uses [Ethers V6](https://docs.ethers.org/v6/). It's a small app that runs on the Goerli testnet and provides a wallet connection out of the box (Injected / Metamask).
 
 | Lockup Linear (Form)                | Lockup Dynamic (Form)                | Headless                             |
 | ----------------------------------- | ------------------------------------ | ------------------------------------ |
-| ![LL](./packages/assets/linear.png) | ![LD](./packages/assets/dynamic.png) | ![H](./packages/assets/headless.png) |
+| ![LL](./packages/assets/lockup-linear.png) | ![LD](./packages/assets/lockup-dynamic.png) | ![H](./packages/assets/headless.png) |
 
-### Features
-
-**Lockup Linear = LL, Lockup Dynamic = LD**
+### Main features
 
 - Create a LL stream with Durations using the UI Form
 - Create a LD stream with Deltas using the UI Form
@@ -20,16 +30,16 @@ This sandbox environment showcases a frontend integration with the [Sablier V2](
 - Create a LL stream with Range in headless mode (tweak dates/ranges in code)
 - Create a LD stream with Deltas in headless mode (tweak deltas in code)
 - Create a LD stream with Milestones in headless mode (tweak milestones in code)
-- Mint testnet DAI tokens ([Goerli](https://goerli.etherscan.io/token/0x97cb342cf2f6ecf48c1285fb8668f5a4237bf862))
+- Mint [testnet DAI](https://goerli.etherscan.io/token/0x97cb342cf2f6ecf48c1285fb8668f5a4237bf862) tokens
 - Approve spending DAI tokens for both the LL and LD contracts
 
-Most of the transaction magic happens inside [`models/Transaction.ts`](/examples/ethers-v6/src/models/Transaction.ts). Have a look to understand how parameters are formatted (strings to Big Int, padding numbers with decimals etc.) and sent to the contracts.
+Most of the transaction magic happens in [`models/Transaction.ts`](/examples/ethers-v6/src/models/Transaction.ts). Have a look to understand how parameters are formatted (strings to Big Int, padding numbers with decimals, etc.) and sent to the contracts.
 
-For the **headless** mode, head over to [`constants/data.ts`](/examples/ethers-v6/src/constants/data.ts). Here you'll be able to tweak the parameters to create streams of different values or shapes (segments).
+For the **headless** mode, see [`constants/data.ts`](/examples/ethers-v6/src/constants/data.ts). Here, you'll be able to tweak the parameters to create streams of different values or shapes (segments).
 
-#### Other features
+### Other features
 
-In the UI Forms you may find `Prefill form` buttons. Clicking on them will add pre-configured data into the fields as an example of what the data should look like.
+In the UI Forms, you may find `Prefill form` buttons. Clicking on them will add pre-configured data into the fields as an example of what the data should look like.
 
 After you create a test stream, make sure to connect to our main [app.sablier.com](https://app.sablier.com) interface with your "sender" wallet to check out what the [stream actually looks like](https://docs.sablier.com/apps/features#detailed-panels).
 
