@@ -1,3 +1,5 @@
+![Sablier V2 Sandbox](/packages/assets/banner.png)
+
 # Sablier V2 Sandbox
 
 Front-end sandbox development environments for Sablier V2.
@@ -16,15 +18,17 @@ For more information, please refer to our [documentation](https://docs.sablier.c
 
 It is worth noting that you can charge a service fee when creating a stream. This fee is a percentage of the stream's total value and is paid to your designated broker address. Check out the "broker" references in the code to see how this works, as well as this [guide](https://docs.sablier.com/concepts/protocol/fees) from our docs.
 
-## Ethers V6
+## Environments and Examples
+
+### Ethers V6
 
 An integration of the [Sablier V2 Core](https://github.com/sablier-labs/v2-core) contracts into a frontend environment that uses [Ethers V6](https://docs.ethers.org/v6/). It's a small app that runs on the Goerli testnet and provides a wallet connection out of the box (Injected / Metamask).
 
-| Lockup Linear (Form)                | Lockup Dynamic (Form)                | Headless                             |
-| ----------------------------------- | ------------------------------------ | ------------------------------------ |
+| Lockup Linear (Form)                       | Lockup Dynamic (Form)                       | Headless                             |
+| ------------------------------------------ | ------------------------------------------- | ------------------------------------ |
 | ![LL](./packages/assets/lockup-linear.png) | ![LD](./packages/assets/lockup-dynamic.png) | ![H](./packages/assets/headless.png) |
 
-### Features
+#### Features
 
 - Create a LL stream with Durations using the UI Form
 - Create a LD stream with Deltas using the UI Form
@@ -39,7 +43,7 @@ Most of the transaction magic happens in [`models/Transaction.ts`](/examples/eth
 
 For the **headless** mode, see [`constants/data.ts`](/examples/ethers-v6/src/constants/data.ts). Here, you'll be able to tweak the parameters to create streams of different values or shapes (segments).
 
-### Next steps
+#### Next steps
 
 In the UI Forms, you may find `Prefill form` buttons. Clicking on them will add pre-configured data into the fields as an example of what the data should look like.
 
@@ -48,3 +52,7 @@ After you create a test stream, make sure to connect to our main [app.sablier.co
 | Payload (LD with two segments)            | Shape                                      |
 | ----------------------------------------- | ------------------------------------------ |
 | ![E](./packages/assets/emission-code.png) | ![E](./packages/assets/emission-shape.png) |
+
+### Viem / Wagmi
+
+While not yet implemented in a bespoke sandbox, we strongly recommend having a look at [wagmi](wagmi.sh/) and [viem](https://viem.sh/) for the web3 interactions. To understand how the API may change between ethers and the wagmi stack, please read this [migration](https://wagmi.sh/react/ethers-adapters) guide.
