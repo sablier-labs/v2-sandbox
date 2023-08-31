@@ -14,6 +14,8 @@ There are two types of streaming models in Sablier:
 
 For more information, please refer to our [documentation](https://docs.sablier.com).
 
+It is worth noting that you can charge a service fee when creating a stream. This fee is a percentage of the stream's total value and is paid to your designated broker address. Check out the "broker" references in the code to see how this works, as well as this [guide](https://docs.sablier.com/concepts/protocol/fees) from our docs.
+
 ## Ethers V6
 
 An integration of the [Sablier V2 Core](https://github.com/sablier-labs/v2-core) contracts into a frontend environment that uses [Ethers V6](https://docs.ethers.org/v6/). It's a small app that runs on the Goerli testnet and provides a wallet connection out of the box (Injected / Metamask).
@@ -22,7 +24,7 @@ An integration of the [Sablier V2 Core](https://github.com/sablier-labs/v2-core)
 | ----------------------------------- | ------------------------------------ | ------------------------------------ |
 | ![LL](./packages/assets/lockup-linear.png) | ![LD](./packages/assets/lockup-dynamic.png) | ![H](./packages/assets/headless.png) |
 
-### Main features
+### Features
 
 - Create a LL stream with Durations using the UI Form
 - Create a LD stream with Deltas using the UI Form
@@ -37,11 +39,11 @@ Most of the transaction magic happens in [`models/Transaction.ts`](/examples/eth
 
 For the **headless** mode, see [`constants/data.ts`](/examples/ethers-v6/src/constants/data.ts). Here, you'll be able to tweak the parameters to create streams of different values or shapes (segments).
 
-### Other features
+### Next steps
 
 In the UI Forms, you may find `Prefill form` buttons. Clicking on them will add pre-configured data into the fields as an example of what the data should look like.
 
-After you create a test stream, make sure to connect to our main [app.sablier.com](https://app.sablier.com) interface with your "sender" wallet to check out what the [stream actually looks like](https://docs.sablier.com/apps/features#detailed-panels).
+After you create a test stream, make sure to connect to our main [app.sablier.com](https://app.sablier.com) interface with your "sender" wallet to see what the stream [actually looks like](https://docs.sablier.com/apps/features#detailed-panels).
 
 | Payload (LD with two segments)            | Shape                                      |
 | ----------------------------------------- | ------------------------------------------ |

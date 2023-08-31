@@ -56,7 +56,7 @@ export type ICreateWithDurations = [
   asset: IAddress,
   cancelable: boolean,
   durations: [cliff: ISeconds, total: ISeconds],
-  broker: [account: IAddress, fee: 0n]
+  broker: [account: IAddress, fee: 0n] // TIP: you can set this to your own address to charge a fee
 ];
 
 export type ICreateWithRange = [
@@ -66,7 +66,7 @@ export type ICreateWithRange = [
   asset: IAddress,
   cancelable: boolean,
   durations: [start: ISeconds, cliff: ISeconds, end: ISeconds],
-  broker: [account: IAddress, fee: 0n]
+  broker: [account: IAddress, fee: 0n] // TIP: you can set this to your own address to charge a fee
 ];
 
 export type ISegmentD = [
