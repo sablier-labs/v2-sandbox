@@ -55,4 +55,6 @@ After you create a test stream, make sure to connect to our main [app.sablier.co
 
 ### Viem / Wagmi
 
-While not yet implemented in a bespoke sandbox, we strongly recommend having a look at [wagmi](wagmi.sh/) and [viem](https://viem.sh/) for the web3 interactions. To understand how the API may change between ethers and the wagmi stack, please read this [migration](https://wagmi.sh/react/ethers-adapters) guide.
+While not yet implemented in a bespoke sandbox, we strongly recommend using [wagmi](wagmi.sh/) and [viem](https://viem.sh/) for building your web3 app. The official Sablier interface uses these two libraries.
+
+To understand how the API changes between ethers and the wagmi stack, see this [migration](https://wagmi.sh/react/ethers-adapters) guide.
