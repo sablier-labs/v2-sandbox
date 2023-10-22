@@ -1,5 +1,5 @@
 {
-  "name": "@sablier/v2-sandbox-ethers-v6",
+  "name": "@sablier/v2-sandbox-wagmi",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -14,13 +14,14 @@
     "@sablier/v2-core": "^1.0.2",
     "bignumber.js": "^9.1.2",
     "cross-fetch": "^4.0.0",
-    "ethers": "^6.7.1",
     "lodash": "^4.17.21",
     "next": "13.4.19",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "styled-components": "^6.0.7",
     "styled-normalize": "^8.0.7",
+    "viem": "^1.16.6",
+    "wagmi": "^1.4.5",
     "zustand": "^4.4.1"
   },
   "devDependencies": {

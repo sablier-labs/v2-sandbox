@@ -20,6 +20,8 @@ It is worth noting that you can charge a service fee when creating a stream. Thi
 
 ## Environments and Examples
 
+![Sablier V2 Sandbox](/packages/assets/banner-s1.png)
+
 ### Ethers V6
 
 An integration of the [Sablier V2 Core](https://github.com/sablier-labs/v2-core) contracts into a frontend environment that uses [Ethers V6](https://docs.ethers.org/v6/). It's a small app that runs on the Goerli testnet and provides a wallet connection out of the box (Injected / Metamask).
@@ -53,8 +55,23 @@ After you create a test stream, make sure to connect to our main [app.sablier.co
 | ----------------------------------------- | ------------------------------------------ |
 | ![E](./packages/assets/emission-code.png) | ![E](./packages/assets/emission-shape.png) |
 
-### Viem / Wagmi
+---
 
-While not yet implemented in a bespoke sandbox, we strongly recommend using [wagmi](wagmi.sh/) and [viem](https://viem.sh/) for building your web3 app. The official Sablier interface uses these two libraries.
+![Sablier V2 Sandbox](/packages/assets/banner-s2.png)
 
-To understand how the API changes between ethers and the wagmi stack, see this [migration](https://wagmi.sh/react/ethers-adapters) guide.
+### wagmi / viem
+
+The official Sablier interface uses [wagmi](wagmi.sh/) and [viem](https://viem.sh/). Both libraries offer top-notch support (check the docs and their github) and integrate nicely with things like RainbowKit.
+
+#### Features
+
+Same as the ones implemented in the [Ethers V6](#ethers-v6) sandbox.
+
+#### Opinionated Sandbox
+
+This current sandbox uses [wagmi's react context](https://wagmi.sh/react/getting-started) and configuration to set up the wallet connection (through an Injected Provider / Metamask). It then makes use of [wagmi's core actions](https://wagmi.sh/core/getting-started) to bundle contract interactions under the `Transaction` model.
+
+While this helps keep things similar to the way they're implemented in the Ethers V6 Sandbox, keep in mind that you can always choose to implement them differently. For example, using:
+
+- Viem, the Typescript library. It's pretty much a 1:1 replacement for ethers (see [migration](https://wagmi.sh/react/ethers-adapters) guide here). The aforementioned `wagmi/actions` (core actions) are more or less a wrapper around viem's utilities, with the additional benefit that the wallet and public clients are automatically sourced behind the scenes (you don't have to pass them manually).
+- Wagmi's hooks, for a more effect oriented React application

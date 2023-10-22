@@ -1,8 +1,9 @@
 import styled from "styled-components";
-import { useWeb3Context } from "../Web3";
 import { useCallback } from "react";
 import Transaction from "../../models/Transaction";
+import { useAccount, useConnect, useWalletClient } from "wagmi";
 import { DAI, CHAIN_GOERLI_ID } from "../../constants";
+import { InjectedConnector } from "wagmi/connectors/injected";
 
 const Wrapper = styled.div`
   display: flex;
@@ -28,17 +29,21 @@ const Error = styled.p`
 `;
 
 function Account() {
-  const { address, error, status, signer } = useWeb3Context();
+  const { address, status } = useAccount();
+  const { connect } = useConnect({
+    connector: new InjectedConnector(),
+  });
+  const { data: walletClient, error } = useWalletClient();
 
   const onMint = useCallback(async () => {
-    if (signer) {
+    if (walletClient) {
       try {
-        await Transaction.doMint(signer, DAI[CHAIN_GOERLI_ID]);
+        await Transaction.doMint(DAI[CHAIN_GOERLI_ID]);
       } catch (error) {
         console.error(error);
       }
     }
-  }, [signer]);
+  }, [walletClient]);
 
   return (
     <Wrapper>
@@ -46,12 +51,12 @@ function Account() {
       <Divider />
       {error ? (
         <Error>
-          <b color={"red"}>Error:</b> {error}
+          <b color={"red"}>Error:</b> {error?.name || error?.message}
         </Error>
       ) : (
         false
       )}
-      {status === "connecting" ? (
+      {status === "connecting" || status === "reconnecting" ? (
         <p>
           <b>Status:</b> Connecting
         </p>
@@ -61,6 +66,14 @@ function Account() {
       {status === "disconnected" ? (
         <p>
           <b>Status:</b> Not connected
+          <span> . . . </span>
+          <button
+            onClick={() => {
+              connect();
+            }}
+          >
+            Connect
+          </button>
         </p>
       ) : (
         false

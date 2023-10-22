@@ -13,7 +13,13 @@ import type {
 import { CHAIN_GOERLI_ID, contracts, ERC20 } from "../constants";
 import SablierV2LockupLinear from "@sablier/v2-core/artifacts/SablierV2LockupLinear.json";
 import SablierV2LockupDynamic from "@sablier/v2-core/artifacts/SablierV2LockupDynamic.json";
-import { Contract, ethers } from "ethers";
+import { UserRejectedRequestError, zeroAddress } from "viem";
+import {
+  getAccount,
+  readContract,
+  writeContract,
+  waitForTransaction,
+} from "wagmi/actions";
 import BigNumber from "bignumber.js";
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_FLOOR });
@@ -29,9 +35,23 @@ function expect(
   return true;
 }
 
+export function erroneous(error: unknown): Error | unknown {
+  const name = _.get(error, "name") || "";
+  const message = _.get(error, "message") || "";
+
+  if (
+    name === UserRejectedRequestError.name ||
+    message.includes("User denied message signature") ||
+    message.includes("User denied transaction signature")
+  ) {
+    return;
+  } else {
+    throw error;
+  }
+}
+
 export default class Transaction {
   static async doApprove(
-    signer: ethers.Signer,
     spender: keyof (typeof contracts)[typeof CHAIN_GOERLI_ID],
     state: {
       amount: string | undefined;
@@ -44,60 +64,69 @@ export default class Transaction {
         return;
       }
 
-      const contract_token = new Contract(state.token, ERC20.abi, signer);
-      const decimals: bigint = await contract_token.decimals();
-      const amount = BigInt(state.amount) * 10n ** decimals;
+      const decimals = await readContract({
+        address: state.token as IAddress,
+        abi: ERC20.abi,
+        functionName: "decimals",
+      });
+      const amount = BigInt(state.amount) * 10n ** BigInt(decimals);
 
-      const tx = await contract_token.approve.send(
-        contracts[CHAIN_GOERLI_ID][spender],
-        amount
-      );
+      const tx = await writeContract({
+        address: state.token as IAddress,
+        abi: ERC20.abi,
+        functionName: "approve",
+        args: [contracts[CHAIN_GOERLI_ID][spender], amount],
+      });
 
       if (tx.hash) {
         log(`Token approval sent to the blockchain with hash: ${tx.hash}.`);
       }
 
-      const receipt = await tx.wait();
-      if (receipt?.status === 1) {
+      const receipt = await waitForTransaction({ hash: tx.hash });
+
+      if (receipt?.status === "success") {
         log(`Token approval successfully registered.`);
       } else {
         log(`Token approval failed.`);
       }
     } catch (error) {
-      if ((_.get(error, "code") || "").includes("ACTION_REJECTED")) {
-        return;
-      }
-      throw error;
+      erroneous(error);
     }
   }
 
-  static async doMint(signer: ethers.Signer, token: IAddress) {
+  static async doMint(token: IAddress) {
     try {
       if (!expect(token, "token")) {
         return;
       }
 
-      const contract_token = new Contract(token, ERC20.abi, signer);
-      const decimals: bigint = await contract_token.decimals();
+      const decimals = await readContract({
+        address: token,
+        abi: ERC20.abi,
+        functionName: "decimals",
+      });
 
       /** We use BigNumber to convert float values to decimal padded BigInts */
       const padding = new BigNumber(10).pow(new BigNumber(decimals.toString()));
       const amount = BigInt(new BigNumber("100000").times(padding).toFixed());
 
-      const sender = await signer.getAddress();
-
-      const tx = await contract_token.mint(sender, amount);
-      const _receipt = await tx.wait();
-    } catch (error) {
-      if ((_.get(error, "code") || "").includes("ACTION_REJECTED")) {
+      const sender = await getAccount().address;
+      if (!expect(sender, "sender")) {
         return;
       }
-      throw error;
+
+      const _tx = await writeContract({
+        address: token,
+        abi: ERC20.abi,
+        functionName: "mint",
+        args: [sender, amount],
+      });
+    } catch (error) {
+      erroneous(error);
     }
   }
 
   static async doCreateLinear(
-    signer: ethers.Signer,
     state: {
       amount: string | undefined;
       cancelability: boolean;
@@ -119,8 +148,11 @@ export default class Transaction {
         return;
       }
 
-      const contract_token = new Contract(state.token, ERC20.abi, signer);
-      const decimals: bigint = await contract_token.decimals();
+      const decimals = await readContract({
+        address: state.token as IAddress,
+        abi: ERC20.abi,
+        functionName: "decimals",
+      });
 
       /** We use BigNumber to convert float values to decimal padded BigInts */
       const padding = new BigNumber(10).pow(new BigNumber(decimals.toString()));
@@ -128,12 +160,10 @@ export default class Transaction {
         new BigNumber(state.amount).times(padding).toFixed()
       );
 
-      const sender = await signer.getAddress();
-      const contract_lockup = new Contract(
-        contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
-        SablierV2LockupLinear.abi,
-        signer
-      );
+      const sender = await getAccount().address;
+      if (!expect(sender, "sender")) {
+        return;
+      }
 
       const cliff = (() => {
         try {
@@ -149,38 +179,40 @@ export default class Transaction {
 
       const payload: ICreateWithDurations = [
         sender,
-        state.recipient,
+        state.recipient as IAddress,
         amount,
-        state.token,
+        state.token as IAddress,
         state.cancelability,
         [cliff, BigInt(state.duration)],
-        [ethers.ZeroAddress, 0n],
+        [zeroAddress, 0n],
       ];
 
       console.info("Payload", payload);
 
-      const tx = await contract_lockup.createWithDurations.send(payload);
+      const tx = await writeContract({
+        address: contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
+        abi: SablierV2LockupLinear.abi,
+        functionName: "createWithDurations",
+        args: [payload],
+      });
 
       if (tx.hash) {
         log(`LL Stream sent to the blockchain with hash: ${tx.hash}.`);
       }
 
-      const receipt = await tx.wait();
-      if (receipt?.status === 1) {
+      const receipt = await waitForTransaction({ hash: tx.hash });
+
+      if (receipt?.status === "success") {
         log(`LL Stream successfully created.`);
       } else {
         log(`LL Stream creation failed.`);
       }
     } catch (error) {
-      if ((_.get(error, "code") || "").includes("ACTION_REJECTED")) {
-        return;
-      }
-      throw error;
+      erroneous(error);
     }
   }
 
   static async doCreateDynamic(
-    signer: ethers.Signer,
     state: {
       cancelability: boolean;
       recipient: string | undefined;
@@ -203,10 +235,19 @@ export default class Transaction {
         return;
       }
 
-      const contract_token = new Contract(state.token, ERC20.abi, signer);
-      const decimals: bigint = await contract_token.decimals();
+      const decimals = await readContract({
+        address: state.token as IAddress,
+        abi: ERC20.abi,
+        functionName: "decimals",
+      });
+
       /** We use BigNumber to convert float values to decimal padded BigInts */
       const padding = new BigNumber(10).pow(new BigNumber(decimals.toString()));
+
+      const sender = await getAccount().address;
+      if (!expect(sender, "sender")) {
+        return;
+      }
 
       const segments: ISegmentD[] = state.segments.map((segment) => {
         if (
@@ -229,13 +270,6 @@ export default class Transaction {
         return result;
       });
 
-      const sender = await signer.getAddress();
-      const contract_lockup = new Contract(
-        contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
-        SablierV2LockupDynamic.abi,
-        signer
-      );
-
       const amount = segments.reduce(
         (prev, curr) => prev + (curr?.[0] || 0n),
         0n
@@ -244,116 +278,121 @@ export default class Transaction {
       const payload: ICreateWithDeltas = [
         sender,
         state.cancelability,
-        state.recipient,
+        state.recipient as IAddress,
         amount,
-        state.token,
-        [ethers.ZeroAddress, 0n],
+        state.token as IAddress,
+        [zeroAddress, 0n],
         segments,
       ];
 
       console.info("Payload", payload);
 
-      const tx = await contract_lockup.createWithDeltas.send(payload);
+      const tx = await writeContract({
+        address: contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
+        abi: SablierV2LockupDynamic.abi,
+        functionName: "createWithDeltas",
+        args: [payload],
+      });
 
       if (tx.hash) {
         log(`LD Stream sent to the blockchain with hash: ${tx.hash}.`);
       }
 
-      const receipt = await tx.wait();
-      if (receipt?.status === 1) {
+      const receipt = await waitForTransaction({ hash: tx.hash });
+
+      if (receipt?.status === "success") {
         log(`LD Stream successfully created.`);
       } else {
         log(`LD Stream creation failed.`);
       }
     } catch (error) {
-      if ((_.get(error, "code") || "").includes("ACTION_REJECTED")) {
+      erroneous(error);
+    }
+  }
+
+  static async doCreateLinearWithDurationsRaw(payload: ICreateWithDurations) {
+    const data = _.clone(payload);
+    if (data[0].toString() === "<< YOUR CONNECTED ADDRESS AS THE SENDER >>") {
+      const sender = await getAccount().address;
+      if (!expect(sender, "sender")) {
         return;
       }
-      throw error;
-    }
-  }
-
-  static async doCreateLinearWithDurationsRaw(
-    signer: ethers.Signer,
-    payload: ICreateWithDurations
-  ) {
-    const contract_lockup = new Contract(
-      contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
-      SablierV2LockupLinear.abi,
-      signer
-    );
-
-    const data = _.clone(payload);
-    if (data[0] === "<< YOUR CONNECTED ADDRESS AS THE SENDER >>") {
-      data[0] = await signer.getAddress();
+      data[0] = sender;
     }
 
     console.info("Payload", data);
 
-    const tx = await contract_lockup.createWithDurations.send(data);
-    return tx.wait();
+    const tx = await writeContract({
+      address: contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
+      abi: SablierV2LockupLinear.abi,
+      functionName: "createWithDurations",
+      args: [data],
+    });
+    return waitForTransaction({ hash: tx.hash });
   }
 
-  static async doCreateLinearWithRangeRaw(
-    signer: ethers.Signer,
-    payload: ICreateWithRange
-  ) {
-    const contract_lockup = new Contract(
-      contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
-      SablierV2LockupLinear.abi,
-      signer
-    );
-
+  static async doCreateLinearWithRangeRaw(payload: ICreateWithRange) {
     const data = _.clone(payload);
-    if (data[0] === "<< YOUR CONNECTED ADDRESS AS THE SENDER >>") {
-      data[0] = await signer.getAddress();
+    if (data[0].toString() === "<< YOUR CONNECTED ADDRESS AS THE SENDER >>") {
+      const sender = await getAccount().address;
+      if (!expect(sender, "sender")) {
+        return;
+      }
+      data[0] = sender;
     }
 
     console.info("Payload", data);
 
-    const tx = await contract_lockup.createWithRange.send(data);
-    return tx.wait();
+    const tx = await writeContract({
+      address: contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
+      abi: SablierV2LockupLinear.abi,
+      functionName: "createWithRange",
+      args: [data],
+    });
+    return waitForTransaction({ hash: tx.hash });
   }
 
-  static async doCreateDynamicWithDeltasRaw(
-    signer: ethers.Signer,
-    payload: ICreateWithDeltas
-  ) {
-    const contract_lockup = new Contract(
-      contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
-      SablierV2LockupDynamic.abi,
-      signer
-    );
-
+  static async doCreateDynamicWithDeltasRaw(payload: ICreateWithDeltas) {
     const data = _.clone(payload);
-    if (data[0] === "<< YOUR CONNECTED ADDRESS AS THE SENDER >>") {
-      data[0] = await signer.getAddress();
+    if (data[0].toString() === "<< YOUR CONNECTED ADDRESS AS THE SENDER >>") {
+      const sender = await getAccount().address;
+      if (!expect(sender, "sender")) {
+        return;
+      }
+      data[0] = sender;
     }
 
     console.info("Payload", data);
 
-    const tx = await contract_lockup.createWithDeltas.send(data);
-    return tx.wait();
+    const tx = await writeContract({
+      address: contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
+      abi: SablierV2LockupDynamic.abi,
+      functionName: "createWithDeltas",
+      args: [data],
+    });
+    return waitForTransaction({ hash: tx.hash });
   }
 
   static async doCreateDynamicWithMilestonesRaw(
-    signer: ethers.Signer,
     payload: ICreateWithMilestones
   ) {
-    const contract_lockup = new Contract(
-      contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
-      SablierV2LockupDynamic.abi,
-      signer
-    );
-
     const data = _.clone(payload);
-    if (data[0] === "<< YOUR CONNECTED ADDRESS AS THE SENDER >>") {
-      data[0] = await signer.getAddress();
+    if (data[0].toString() === "<< YOUR CONNECTED ADDRESS AS THE SENDER >>") {
+      const sender = await getAccount().address;
+      if (!expect(sender, "sender")) {
+        return;
+      }
+      data[0] = sender;
     }
 
     console.info("Payload", data);
 
-    const tx = await contract_lockup.createWithMilestones.send(data);
-    return tx.wait();
+    const tx = await writeContract({
+      address: contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
+      abi: SablierV2LockupDynamic.abi,
+      functionName: "createWithMilestones",
+      args: [data],
+    });
+    return waitForTransaction({ hash: tx.hash });
   }
 }
