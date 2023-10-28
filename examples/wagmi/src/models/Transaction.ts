@@ -10,9 +10,10 @@ import type {
   ICreateWithRange,
   IAddress,
 } from "../types";
-import { CHAIN_GOERLI_ID, contracts, ERC20 } from "../constants";
+import { CHAIN_GOERLI_ID, contracts, ERC20, PERMIT2 } from "../constants";
 import SablierV2LockupLinear from "@sablier/v2-core/artifacts/SablierV2LockupLinear.json";
 import SablierV2LockupDynamic from "@sablier/v2-core/artifacts/SablierV2LockupDynamic.json";
+
 import { UserRejectedRequestError, zeroAddress } from "viem";
 import {
   getAccount,

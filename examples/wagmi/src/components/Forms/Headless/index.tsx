@@ -11,6 +11,7 @@ import {
   LOCKUP_DYNAMIC_WITH_MILESTONES,
 } from "../../../constants/data";
 import { useAccount } from "wagmi";
+import Periphery from "../../../models/Periphery";
 
 const Wrapper = styled.div`
   display: grid;
@@ -128,6 +129,18 @@ function Headless() {
     }
   }, [isConnected]);
 
+  const onSimulateLockupLinearPermit2 = useCallback(async () => {
+    if (isConnected) {
+      try {
+        await Periphery.doSimulateLockupLinearPermit2(
+          LOCKUP_LINEAR_WITH_DURATIONS
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [isConnected]);
+
   return (
     <Wrapper>
       <Box>
@@ -187,6 +200,18 @@ function Headless() {
           </p>
         </Header>
         <Button onClick={onCreateLockupDynamicWithMilestones}>Create</Button>
+      </Box>
+      <Box>
+        <Header data-type={"linear"}>
+          <p>
+            <b>
+              Permit2 <span>Signature</span>
+            </b>
+          </p>
+        </Header>
+        <Button onClick={onSimulateLockupLinearPermit2}>
+          Simulate Permit2
+        </Button>
       </Box>
     </Wrapper>
   );
