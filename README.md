@@ -75,3 +75,11 @@ While this helps keep things similar to the way they're implemented in the Ether
 
 - Viem, the Typescript library. It's pretty much a 1:1 replacement for ethers (see [migration](https://wagmi.sh/react/ethers-adapters) guide here). The aforementioned `wagmi/actions` (core actions) are more or less a wrapper around viem's utilities, with the additional benefit that the wallet and public clients are automatically sourced behind the scenes (you don't have to pass them manually).
 - Wagmi's hooks, for a more effect oriented React application
+
+## Work In Progress
+
+The `feat/permit2` branch includes an example of a create linear stream flow using:
+
+- Permit2 signatures
+- The PRB Proxy
+- A dedicated Sablier V2 Proxy Target
