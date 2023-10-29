@@ -88,11 +88,13 @@ export function Amount() {
         return _.toString(input);
       })();
 
-      if (value !== "" && !new RegExp(REGEX_FLOAT).test(value)) {
-        return;
+      if (
+        value === "" ||
+        new RegExp(REGEX_FLOAT).test(value) ||
+        new RegExp(REGEX_INTEGER).test(value)
+      ) {
+        update({ amount: value });
       }
-
-      update({ amount: value });
     },
     [update]
   );
@@ -103,7 +105,7 @@ export function Amount() {
       id={"amount"}
       value={amount}
       onChange={onChange}
-      format={"number"}
+      format={"text"}
       placeholder={"Amount to be streamed (no decimals)..."}
     />
   );

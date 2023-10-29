@@ -131,16 +131,17 @@ export function Amount({ index }: { index: number }) {
         }
         return _.toString(input);
       })();
+      if (
+        value === "" ||
+        new RegExp(REGEX_FLOAT).test(value) ||
+        new RegExp(REGEX_INTEGER).test(value)
+      ) {
+        const state = useFormStore.getState();
+        const segments = _.clone(state.segments);
+        segments[index].amount = value;
 
-      if (value !== "" && !new RegExp(REGEX_FLOAT).test(value)) {
-        return;
+        update({ segments });
       }
-
-      const state = useFormStore.getState();
-      const segments = _.clone(state.segments);
-      segments[index].amount = value;
-
-      update({ segments });
     },
     [index, update]
   );
@@ -151,7 +152,7 @@ export function Amount({ index }: { index: number }) {
       id={"segment_amount"}
       value={segment.amount}
       onChange={onChange}
-      format={"number"}
+      format={"text"}
       placeholder={"Amount streamed this segment (no decimals)..."}
     />
   );
