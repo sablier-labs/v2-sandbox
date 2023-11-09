@@ -103,3 +103,58 @@ export type ICreateWithMilestones = [
 
   segments: ISegmentM[]
 ];
+
+/** --------- */
+
+export type IBatchCreateWithDurations = [
+  lockup: IAddress,
+  asset: IAddress,
+  batch: [
+    sender: IAddress,
+    recipient: IAddress,
+    totalAmount: IAmountWithDecimals,
+    cancelable: boolean,
+    durations: [cliff: ISeconds, total: ISeconds],
+    broker: [account: IAddress, fee: 0n]
+  ][] // Array of batches
+];
+
+export type IBatchCreateWithRange = [
+  lockup: IAddress,
+  asset: IAddress,
+  batch: [
+    sender: IAddress,
+    recipient: IAddress,
+    totalAmount: IAmountWithDecimals,
+    cancelable: boolean,
+    range: [start: ISeconds, cliff: ISeconds, end: ISeconds],
+    broker: [account: IAddress, fee: 0n]
+  ][] // Array of batches
+];
+
+export type IBatchCreateWithDeltas = [
+  lockup: IAddress,
+  asset: IAddress,
+  batch: [
+    sender: IAddress,
+    cancelable: boolean,
+    recipient: IAddress,
+    totalAmount: IAmountWithDecimals,
+    broker: [account: IAddress, fee: 0n],
+    segments: ISegmentD[]
+  ][] // Array of batches
+];
+
+export type IBatchCreateWithMilestones = [
+  lockup: IAddress,
+  asset: IAddress,
+  batch: [
+    sender: IAddress,
+    startTime: ISeconds,
+    cancelable: boolean,
+    recipient: IAddress,
+    totalAmount: IAmountWithDecimals,
+    broker: [account: IAddress, fee: 0n],
+    segments: ISegmentM[]
+  ][] // Array of batches
+];
