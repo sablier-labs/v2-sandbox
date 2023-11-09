@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useCallback } from "react";
-import Transaction from "../../models/Transaction";
+import { ERC20 } from "../../models";
 import { useAccount, useConnect, useWalletClient } from "wagmi";
 import { DAI, CHAIN_GOERLI_ID } from "../../constants";
 import { InjectedConnector } from "wagmi/connectors/injected";
@@ -38,7 +38,7 @@ function Account() {
   const onMint = useCallback(async () => {
     if (walletClient) {
       try {
-        await Transaction.doMint(DAI[CHAIN_GOERLI_ID]);
+        await ERC20.doMint(DAI[CHAIN_GOERLI_ID]);
       } catch (error) {
         console.error(error);
       }

@@ -8,7 +8,7 @@ import {
   Duration,
 } from "./fields";
 import { useCallback } from "react";
-import Transaction from "../../../models/Transaction";
+import { Core, ERC20 } from "../../../models";
 import useStoreForm, { prefill } from "./store";
 import _ from "lodash";
 import { useAccount } from "wagmi";
@@ -85,11 +85,7 @@ function LockupLinear() {
       const state = useStoreForm.getState();
       try {
         state.api.update({ error: undefined });
-        await Transaction.doApprove(
-          "SablierV2LockupLinear",
-          state,
-          state.api.log
-        );
+        await ERC20.doApprove("SablierV2LockupLinear", state, state.api.log);
       } catch (error) {
         state.api.update({ error: _.toString(error) });
       }
@@ -101,7 +97,7 @@ function LockupLinear() {
       const state = useStoreForm.getState();
       try {
         state.api.update({ error: undefined });
-        await Transaction.doCreateLinear(state, state.api.log);
+        await Core.doCreateLinear(state, state.api.log);
       } catch (error) {
         state.api.update({ error: _.toString(error) });
       }

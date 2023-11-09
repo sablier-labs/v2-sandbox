@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useWeb3Context } from "../Web3";
 import { useCallback } from "react";
-import Transaction from "../../models/Transaction";
+import { ERC20 } from "../../models";
 import { DAI, CHAIN_GOERLI_ID } from "../../constants";
 
 const Wrapper = styled.div`
@@ -33,7 +33,7 @@ function Account() {
   const onMint = useCallback(async () => {
     if (signer) {
       try {
-        await Transaction.doMint(signer, DAI[CHAIN_GOERLI_ID]);
+        await ERC20.doMint(signer, DAI[CHAIN_GOERLI_ID]);
       } catch (error) {
         console.error(error);
       }

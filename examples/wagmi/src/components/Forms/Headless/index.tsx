@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Transaction from "../../../models/Transaction";
+import { Core, ERC20 } from "../../../models";
 import { useCallback } from "react";
 import _ from "lodash";
 import {
@@ -65,7 +65,7 @@ function Headless() {
   const onApproveLinear = useCallback(async () => {
     if (isConnected) {
       try {
-        await Transaction.doApprove(...APPROVE_LINEAR, (_value: string) => {});
+        await ERC20.doApprove(...APPROVE_LINEAR, (_value: string) => {});
       } catch (error) {
         console.error(error);
       }
@@ -75,7 +75,7 @@ function Headless() {
   const onApproveDynamic = useCallback(async () => {
     if (isConnected) {
       try {
-        await Transaction.doApprove(...APPROVE_DYNAMIC, (_value: string) => {});
+        await ERC20.doApprove(...APPROVE_DYNAMIC, (_value: string) => {});
       } catch (error) {
         console.error(error);
       }
@@ -85,9 +85,7 @@ function Headless() {
   const onCreateLockupLinearWithDurations = useCallback(async () => {
     if (isConnected) {
       try {
-        await Transaction.doCreateLinearWithDurationsRaw(
-          LOCKUP_LINEAR_WITH_DURATIONS
-        );
+        await Core.doCreateLinearWithDurationsRaw(LOCKUP_LINEAR_WITH_DURATIONS);
       } catch (error) {
         console.error(error);
       }
@@ -97,7 +95,7 @@ function Headless() {
   const onCreateLockupLinearWithRange = useCallback(async () => {
     if (isConnected) {
       try {
-        await Transaction.doCreateLinearWithRangeRaw(LOCKUP_LINEAR_WITH_RANGE);
+        await Core.doCreateLinearWithRangeRaw(LOCKUP_LINEAR_WITH_RANGE);
       } catch (error) {
         console.error(error);
       }
@@ -107,9 +105,7 @@ function Headless() {
   const onCreateLockupDynamicWithDeltas = useCallback(async () => {
     if (isConnected) {
       try {
-        await Transaction.doCreateDynamicWithDeltasRaw(
-          LOCKUP_DYNAMIC_WITH_DELTAS
-        );
+        await Core.doCreateDynamicWithDeltasRaw(LOCKUP_DYNAMIC_WITH_DELTAS);
       } catch (error) {
         console.error(error);
       }
@@ -119,7 +115,7 @@ function Headless() {
   const onCreateLockupDynamicWithMilestones = useCallback(async () => {
     if (isConnected) {
       try {
-        await Transaction.doCreateDynamicWithMilestonesRaw(
+        await Core.doCreateDynamicWithMilestonesRaw(
           LOCKUP_DYNAMIC_WITH_MILESTONES
         );
       } catch (error) {

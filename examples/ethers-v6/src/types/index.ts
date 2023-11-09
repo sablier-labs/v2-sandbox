@@ -65,7 +65,7 @@ export type ICreateWithRange = [
   totalAmount: IAmountWithDecimals,
   asset: IAddress,
   cancelable: boolean,
-  durations: [start: ISeconds, cliff: ISeconds, end: ISeconds],
+  range: [start: ISeconds, cliff: ISeconds, end: ISeconds],
   broker: [account: IAddress, fee: 0n] // TIP: you can set this to your own address to charge a fee
 ];
 

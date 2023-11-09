@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Cancelability, Segments, Token, Recipient } from "./fields";
 import { useCallback } from "react";
-import Transaction from "../../../models/Transaction";
+import { Core, ERC20 } from "../../../models";
 import { useWeb3Context } from "../../Web3";
 import useStoreForm, { prefill } from "./store";
 import _ from "lodash";
@@ -79,7 +79,7 @@ function LockupDynamic() {
       const state = useStoreForm.getState();
       try {
         state.api.update({ error: undefined });
-        await Transaction.doApprove(
+        await ERC20.doApprove(
           signer,
           "SablierV2LockupDynamic",
           {
@@ -99,7 +99,7 @@ function LockupDynamic() {
       const state = useStoreForm.getState();
       try {
         state.api.update({ error: undefined });
-        await Transaction.doCreateDynamic(signer, state, state.api.log);
+        await Core.doCreateDynamic(signer, state, state.api.log);
       } catch (error) {
         state.api.update({ error: _.toString(error) });
       }

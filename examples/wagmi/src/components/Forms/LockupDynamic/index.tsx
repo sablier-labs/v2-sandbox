@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Cancelability, Segments, Token, Recipient } from "./fields";
 import { useCallback } from "react";
-import Transaction from "../../../models/Transaction";
+import { Core, ERC20 } from "../../../models";
 import useStoreForm, { prefill } from "./store";
 import _ from "lodash";
 import { maxUint256 } from "viem";
@@ -79,7 +79,7 @@ function LockupDynamic() {
       const state = useStoreForm.getState();
       try {
         state.api.update({ error: undefined });
-        await Transaction.doApprove(
+        await ERC20.doApprove(
           "SablierV2LockupDynamic",
           {
             amount: (maxUint256 / 10n ** 18n).toString(),
@@ -98,7 +98,7 @@ function LockupDynamic() {
       const state = useStoreForm.getState();
       try {
         state.api.update({ error: undefined });
-        await Transaction.doCreateDynamic(state, state.api.log);
+        await Core.doCreateDynamic(state, state.api.log);
       } catch (error) {
         state.api.update({ error: _.toString(error) });
       }

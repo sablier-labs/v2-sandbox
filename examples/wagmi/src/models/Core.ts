@@ -1,4 +1,5 @@
 import _ from "lodash";
+import BigNumber from "bignumber.js";
 import type {
   IAmountWithDecimals,
   IAmountWithDecimals18,
@@ -10,122 +11,18 @@ import type {
   ICreateWithRange,
   IAddress,
 } from "../types";
-import { CHAIN_GOERLI_ID, contracts, ERC20 } from "../constants";
-import SablierV2LockupLinear from "@sablier/v2-core/artifacts/SablierV2LockupLinear.json";
-import SablierV2LockupDynamic from "@sablier/v2-core/artifacts/SablierV2LockupDynamic.json";
-import { UserRejectedRequestError, zeroAddress } from "viem";
+import { CHAIN_GOERLI_ID, contracts, ABI } from "../constants";
+import { zeroAddress } from "viem";
 import {
   getAccount,
   readContract,
   writeContract,
   waitForTransaction,
 } from "wagmi/actions";
-import BigNumber from "bignumber.js";
 
-BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_FLOOR });
-BigNumber.config({ EXPONENTIAL_AT: 1e9 });
+import { expect, erroneous } from "../utils";
 
-function expect(
-  value: unknown,
-  label: string
-): value is NonNullable<typeof value> {
-  if (_.isNil(value) || _.toString(value).length === 0) {
-    throw new Error(`Missing parameter: ${label}`);
-  }
-  return true;
-}
-
-export function erroneous(error: unknown): Error | unknown {
-  const name = _.get(error, "name") || "";
-  const message = _.get(error, "message") || "";
-
-  if (
-    name === UserRejectedRequestError.name ||
-    message.includes("User denied message signature") ||
-    message.includes("User denied transaction signature")
-  ) {
-    return;
-  } else {
-    throw error;
-  }
-}
-
-export default class Transaction {
-  static async doApprove(
-    spender: keyof (typeof contracts)[typeof CHAIN_GOERLI_ID],
-    state: {
-      amount: string | undefined;
-      token: string | undefined;
-    },
-    log: (value: string) => void
-  ) {
-    try {
-      if (!expect(state.amount, "amount") || !expect(state.token, "token")) {
-        return;
-      }
-
-      const decimals = await readContract({
-        address: state.token as IAddress,
-        abi: ERC20.abi,
-        functionName: "decimals",
-      });
-      const amount = BigInt(state.amount) * 10n ** BigInt(decimals);
-
-      const tx = await writeContract({
-        address: state.token as IAddress,
-        abi: ERC20.abi,
-        functionName: "approve",
-        args: [contracts[CHAIN_GOERLI_ID][spender], amount],
-      });
-
-      if (tx.hash) {
-        log(`Token approval sent to the blockchain with hash: ${tx.hash}.`);
-      }
-
-      const receipt = await waitForTransaction({ hash: tx.hash });
-
-      if (receipt?.status === "success") {
-        log(`Token approval successfully registered.`);
-      } else {
-        log(`Token approval failed.`);
-      }
-    } catch (error) {
-      erroneous(error);
-    }
-  }
-
-  static async doMint(token: IAddress) {
-    try {
-      if (!expect(token, "token")) {
-        return;
-      }
-
-      const decimals = await readContract({
-        address: token,
-        abi: ERC20.abi,
-        functionName: "decimals",
-      });
-
-      /** We use BigNumber to convert float values to decimal padded BigInts */
-      const padding = new BigNumber(10).pow(new BigNumber(decimals.toString()));
-      const amount = BigInt(new BigNumber("100000").times(padding).toFixed());
-
-      const sender = await getAccount().address;
-      if (!expect(sender, "sender")) {
-        return;
-      }
-
-      const _tx = await writeContract({
-        address: token,
-        abi: ERC20.abi,
-        functionName: "mint",
-        args: [sender, amount],
-      });
-    } catch (error) {
-      erroneous(error);
-    }
-  }
-
+export default class Core {
   static async doCreateLinear(
     state: {
       amount: string | undefined;
@@ -150,7 +47,7 @@ export default class Transaction {
 
       const decimals = await readContract({
         address: state.token as IAddress,
-        abi: ERC20.abi,
+        abi: ABI.ERC20.abi,
         functionName: "decimals",
       });
 
@@ -191,7 +88,7 @@ export default class Transaction {
 
       const tx = await writeContract({
         address: contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
-        abi: SablierV2LockupLinear.abi,
+        abi: ABI.SablierV2LockupLinear.abi,
         functionName: "createWithDurations",
         args: [payload],
       });
@@ -237,7 +134,7 @@ export default class Transaction {
 
       const decimals = await readContract({
         address: state.token as IAddress,
-        abi: ERC20.abi,
+        abi: ABI.ERC20.abi,
         functionName: "decimals",
       });
 
@@ -289,7 +186,7 @@ export default class Transaction {
 
       const tx = await writeContract({
         address: contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
-        abi: SablierV2LockupDynamic.abi,
+        abi: ABI.SablierV2LockupDynamic.abi,
         functionName: "createWithDeltas",
         args: [payload],
       });
@@ -324,7 +221,7 @@ export default class Transaction {
 
     const tx = await writeContract({
       address: contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
-      abi: SablierV2LockupLinear.abi,
+      abi: ABI.SablierV2LockupLinear.abi,
       functionName: "createWithDurations",
       args: [data],
     });
@@ -345,7 +242,7 @@ export default class Transaction {
 
     const tx = await writeContract({
       address: contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
-      abi: SablierV2LockupLinear.abi,
+      abi: ABI.SablierV2LockupLinear.abi,
       functionName: "createWithRange",
       args: [data],
     });
@@ -366,7 +263,7 @@ export default class Transaction {
 
     const tx = await writeContract({
       address: contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
-      abi: SablierV2LockupDynamic.abi,
+      abi: ABI.SablierV2LockupDynamic.abi,
       functionName: "createWithDeltas",
       args: [data],
     });
@@ -389,7 +286,7 @@ export default class Transaction {
 
     const tx = await writeContract({
       address: contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
-      abi: SablierV2LockupDynamic.abi,
+      abi: ABI.SablierV2LockupDynamic.abi,
       functionName: "createWithMilestones",
       args: [data],
     });

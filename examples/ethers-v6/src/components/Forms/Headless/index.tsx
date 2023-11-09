@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Transaction from "../../../models/Transaction";
+import { Core, ERC20 } from "../../../models";
 import { useWeb3Context } from "../../Web3";
 import { useCallback } from "react";
 import _ from "lodash";
@@ -65,7 +65,7 @@ function Headless() {
   const onApproveLinear = useCallback(async () => {
     if (signer) {
       try {
-        await Transaction.doApprove(
+        await ERC20.doApprove(
           signer,
           ...APPROVE_LINEAR,
           (_value: string) => {}
@@ -79,7 +79,7 @@ function Headless() {
   const onApproveDynamic = useCallback(async () => {
     if (signer) {
       try {
-        await Transaction.doApprove(
+        await ERC20.doApprove(
           signer,
           ...APPROVE_DYNAMIC,
           (_value: string) => {}
@@ -93,7 +93,7 @@ function Headless() {
   const onCreateLockupLinearWithDurations = useCallback(async () => {
     if (signer) {
       try {
-        await Transaction.doCreateLinearWithDurationsRaw(
+        await Core.doCreateLinearWithDurationsRaw(
           signer,
           LOCKUP_LINEAR_WITH_DURATIONS
         );
@@ -106,10 +106,7 @@ function Headless() {
   const onCreateLockupLinearWithRange = useCallback(async () => {
     if (signer) {
       try {
-        await Transaction.doCreateLinearWithRangeRaw(
-          signer,
-          LOCKUP_LINEAR_WITH_RANGE
-        );
+        await Core.doCreateLinearWithRangeRaw(signer, LOCKUP_LINEAR_WITH_RANGE);
       } catch (error) {
         console.error(error);
       }
@@ -119,7 +116,7 @@ function Headless() {
   const onCreateLockupDynamicWithDeltas = useCallback(async () => {
     if (signer) {
       try {
-        await Transaction.doCreateDynamicWithDeltasRaw(
+        await Core.doCreateDynamicWithDeltasRaw(
           signer,
           LOCKUP_DYNAMIC_WITH_DELTAS
         );
@@ -132,7 +129,7 @@ function Headless() {
   const onCreateLockupDynamicWithMilestones = useCallback(async () => {
     if (signer) {
       try {
-        await Transaction.doCreateDynamicWithMilestonesRaw(
+        await Core.doCreateDynamicWithMilestonesRaw(
           signer,
           LOCKUP_DYNAMIC_WITH_MILESTONES
         );

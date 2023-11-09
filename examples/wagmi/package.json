@@ -20,7 +20,7 @@
     "react-dom": "18.2.0",
     "styled-components": "^6.0.7",
     "styled-normalize": "^8.0.7",
-    "viem": "^1.16.6",
+    "viem": "^1.18.9",
     "wagmi": "^1.4.5",
     "zustand": "^4.4.1"
   },

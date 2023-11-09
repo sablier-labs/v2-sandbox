@@ -8,94 +8,14 @@ import type {
   ICreateWithMilestones,
   ISegmentD,
   ICreateWithRange,
-  IAddress,
 } from "../types";
-import { CHAIN_GOERLI_ID, contracts, ERC20 } from "../constants";
-import SablierV2LockupLinear from "@sablier/v2-core/artifacts/SablierV2LockupLinear.json";
-import SablierV2LockupDynamic from "@sablier/v2-core/artifacts/SablierV2LockupDynamic.json";
+import { CHAIN_GOERLI_ID, contracts, ABI } from "../constants";
+
 import { Contract, ethers } from "ethers";
 import BigNumber from "bignumber.js";
+import { expect, erroneous } from "../utils";
 
-BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_FLOOR });
-BigNumber.config({ EXPONENTIAL_AT: 1e9 });
-
-function expect(
-  value: unknown,
-  label: string
-): value is NonNullable<typeof value> {
-  if (_.isNil(value) || _.toString(value).length === 0) {
-    throw new Error(`Missing parameter: ${label}`);
-  }
-  return true;
-}
-
-export default class Transaction {
-  static async doApprove(
-    signer: ethers.Signer,
-    spender: keyof (typeof contracts)[typeof CHAIN_GOERLI_ID],
-    state: {
-      amount: string | undefined;
-      token: string | undefined;
-    },
-    log: (value: string) => void
-  ) {
-    try {
-      if (!expect(state.amount, "amount") || !expect(state.token, "token")) {
-        return;
-      }
-
-      const contract_token = new Contract(state.token, ERC20.abi, signer);
-      const decimals: bigint = await contract_token.decimals();
-      const amount = BigInt(state.amount) * 10n ** decimals;
-
-      const tx = await contract_token.approve.send(
-        contracts[CHAIN_GOERLI_ID][spender],
-        amount
-      );
-
-      if (tx.hash) {
-        log(`Token approval sent to the blockchain with hash: ${tx.hash}.`);
-      }
-
-      const receipt = await tx.wait();
-      if (receipt?.status === 1) {
-        log(`Token approval successfully registered.`);
-      } else {
-        log(`Token approval failed.`);
-      }
-    } catch (error) {
-      if ((_.get(error, "code") || "").includes("ACTION_REJECTED")) {
-        return;
-      }
-      throw error;
-    }
-  }
-
-  static async doMint(signer: ethers.Signer, token: IAddress) {
-    try {
-      if (!expect(token, "token")) {
-        return;
-      }
-
-      const contract_token = new Contract(token, ERC20.abi, signer);
-      const decimals: bigint = await contract_token.decimals();
-
-      /** We use BigNumber to convert float values to decimal padded BigInts */
-      const padding = new BigNumber(10).pow(new BigNumber(decimals.toString()));
-      const amount = BigInt(new BigNumber("100000").times(padding).toFixed());
-
-      const sender = await signer.getAddress();
-
-      const tx = await contract_token.mint(sender, amount);
-      const _receipt = await tx.wait();
-    } catch (error) {
-      if ((_.get(error, "code") || "").includes("ACTION_REJECTED")) {
-        return;
-      }
-      throw error;
-    }
-  }
-
+export default class Core {
   static async doCreateLinear(
     signer: ethers.Signer,
     state: {
@@ -119,7 +39,7 @@ export default class Transaction {
         return;
       }
 
-      const contract_token = new Contract(state.token, ERC20.abi, signer);
+      const contract_token = new Contract(state.token, ABI.ERC20.abi, signer);
       const decimals: bigint = await contract_token.decimals();
 
       /** We use BigNumber to convert float values to decimal padded BigInts */
@@ -131,7 +51,7 @@ export default class Transaction {
       const sender = await signer.getAddress();
       const contract_lockup = new Contract(
         contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
-        SablierV2LockupLinear.abi,
+        ABI.SablierV2LockupLinear.abi,
         signer
       );
 
@@ -172,10 +92,7 @@ export default class Transaction {
         log(`LL Stream creation failed.`);
       }
     } catch (error) {
-      if ((_.get(error, "code") || "").includes("ACTION_REJECTED")) {
-        return;
-      }
-      throw error;
+      erroneous(error);
     }
   }
 
@@ -203,7 +120,7 @@ export default class Transaction {
         return;
       }
 
-      const contract_token = new Contract(state.token, ERC20.abi, signer);
+      const contract_token = new Contract(state.token, ABI.ERC20.abi, signer);
       const decimals: bigint = await contract_token.decimals();
       /** We use BigNumber to convert float values to decimal padded BigInts */
       const padding = new BigNumber(10).pow(new BigNumber(decimals.toString()));
@@ -232,7 +149,7 @@ export default class Transaction {
       const sender = await signer.getAddress();
       const contract_lockup = new Contract(
         contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
-        SablierV2LockupDynamic.abi,
+        ABI.SablierV2LockupDynamic.abi,
         signer
       );
 
@@ -266,10 +183,7 @@ export default class Transaction {
         log(`LD Stream creation failed.`);
       }
     } catch (error) {
-      if ((_.get(error, "code") || "").includes("ACTION_REJECTED")) {
-        return;
-      }
-      throw error;
+      erroneous(error);
     }
   }
 
@@ -279,7 +193,7 @@ export default class Transaction {
   ) {
     const contract_lockup = new Contract(
       contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
-      SablierV2LockupLinear.abi,
+      ABI.SablierV2LockupLinear.abi,
       signer
     );
 
@@ -300,7 +214,7 @@ export default class Transaction {
   ) {
     const contract_lockup = new Contract(
       contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
-      SablierV2LockupLinear.abi,
+      ABI.SablierV2LockupLinear.abi,
       signer
     );
 
@@ -321,7 +235,7 @@ export default class Transaction {
   ) {
     const contract_lockup = new Contract(
       contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
-      SablierV2LockupDynamic.abi,
+      ABI.SablierV2LockupDynamic.abi,
       signer
     );
 
@@ -342,7 +256,7 @@ export default class Transaction {
   ) {
     const contract_lockup = new Contract(
       contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
-      SablierV2LockupDynamic.abi,
+      ABI.SablierV2LockupDynamic.abi,
       signer
     );
 
