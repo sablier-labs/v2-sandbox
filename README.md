@@ -32,6 +32,8 @@ An integration of the [Sablier V2 Core](https://github.com/sablier-labs/v2-core)
 
 #### Features
 
+**↪ Single stream creation through Core**
+
 - Create a LL stream with Durations using the UI Form
 - Create a LD stream with Deltas using the UI Form
 - Create a LL stream with Durations in headless mode (tweak durations in code)
@@ -40,6 +42,10 @@ An integration of the [Sablier V2 Core](https://github.com/sablier-labs/v2-core)
 - Create a LD stream with Milestones in headless mode (tweak milestones in code)
 - Mint [testnet DAI](https://goerli.etherscan.io/token/0x97cb342cf2f6ecf48c1285fb8668f5a4237bf862) tokens
 - Approve spending DAI tokens for both the LL and LD contracts
+
+**↪ Batch stream creation through Core**
+
+- Create group of LL/LD streams with all possible configurations (4) in headless mode, through a dedicated periphery (SablierV2Batch - Core V2.0)
 
 Most of the transaction magic happens in [`models/Transaction.ts`](/examples/ethers-v6/src/models/Transaction.ts). Have a look to understand how parameters are formatted (strings to Big Int, padding numbers with decimals, etc.) and sent to the contracts.
 
@@ -79,13 +85,6 @@ While this helps keep things similar to the way they're implemented in the Ether
 ## Specialized Branches
 
 This repository houses a few specialized branches. Outside of `main`, these other branches are used for non-general use-cases, experiments or customer-support.
-
-#### feat/batch-v2.0
-
-The [`feat/batch-v2.0`](https://github.com/sablier-labs/v2-sandbox/tree/feat/batch-v2.0) branch showcases **a batch create stream flow** using:
-
-- A dedicated periphery (SablierV2Batch) with support for V2-Core 2.0
-- The `ethers` example
 
 #### feat/permit2
 

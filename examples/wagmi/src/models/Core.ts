@@ -80,8 +80,8 @@ export default class Core {
         amount,
         state.token as IAddress,
         state.cancelability,
-        [cliff, BigInt(state.duration)],
-        [zeroAddress, 0n],
+        { cliff, total: BigInt(state.duration) },
+        { account: zeroAddress, fee: 0n },
       ];
 
       console.info("Payload", payload);
@@ -162,13 +162,13 @@ export default class Core {
         const exponent: IAmountWithDecimals18 =
           BigInt(segment.exponent) * 10n ** 18n;
 
-        const result: ISegmentD = [amount, exponent, delta];
+        const result: ISegmentD = { amount, exponent, delta };
 
         return result;
       });
 
       const amount = segments.reduce(
-        (prev, curr) => prev + (curr?.[0] || 0n),
+        (prev, curr) => prev + (curr?.amount || 0n),
         0n
       );
 
@@ -178,7 +178,7 @@ export default class Core {
         state.recipient as IAddress,
         amount,
         state.token as IAddress,
-        [zeroAddress, 0n],
+        { account: zeroAddress, fee: 0n },
         segments,
       ];
 

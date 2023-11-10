@@ -1,10 +1,15 @@
 import styled from "styled-components";
-import { Core, ERC20 } from "../../../models";
+import { Core, ERC20, Periphery } from "../../../models";
 import { useCallback } from "react";
 import _ from "lodash";
 import {
+  APPROVE_BATCH,
   APPROVE_LINEAR,
   APPROVE_DYNAMIC,
+  BATCH_LOCKUP_LINEAR_WITH_DURATIONS,
+  BATCH_LOCKUP_LINEAR_WITH_RANGE,
+  BATCH_LOCKUP_DYNAMIC_WITH_MILESTONES,
+  BATCH_LOCKUP_DYNAMIC_WITH_DELTAS,
   LOCKUP_LINEAR_WITH_DURATIONS,
   LOCKUP_LINEAR_WITH_RANGE,
   LOCKUP_DYNAMIC_WITH_DELTAS,
@@ -12,7 +17,7 @@ import {
 } from "../../../constants/data";
 import { useAccount } from "wagmi";
 
-const Wrapper = styled.div`
+const WrapperPartial = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   width: 100%;
@@ -57,9 +62,24 @@ const Header = styled.div`
     }
   }
 `;
+const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${(props) => props.theme.colors.gray};
+  margin: 16px 0;
+`;
+
 const Button = styled.button``;
 
-function Headless() {
+const Wrapper = styled(WrapperPartial)`
+  &[data-style="batch"] {
+    & > ${Box} {
+      background-color: #fefefe;
+    }
+  }
+`;
+
+function Single() {
   const { isConnected } = useAccount();
 
   const onApproveLinear = useCallback(async () => {
@@ -188,4 +208,132 @@ function Headless() {
   );
 }
 
+function Group() {
+  const { isConnected } = useAccount();
+
+  const onApproveBatch = useCallback(async () => {
+    if (isConnected) {
+      try {
+        await ERC20.doApprove(...APPROVE_BATCH, (_value: string) => {});
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [isConnected]);
+
+  const onBatchCreateLockupLinearWithDurations = useCallback(async () => {
+    if (isConnected) {
+      try {
+        await Periphery.doBatchCreateLinearWithDurationsRaw(
+          BATCH_LOCKUP_LINEAR_WITH_DURATIONS
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [isConnected]);
+
+  const onBatchCreateLockupLinearWithRange = useCallback(async () => {
+    if (isConnected) {
+      try {
+        await Periphery.doBatchCreateLinearWithRangeRaw(
+          BATCH_LOCKUP_LINEAR_WITH_RANGE
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [isConnected]);
+
+  const onBatchCreateLockupDynamicWithMilestones = useCallback(async () => {
+    if (isConnected) {
+      try {
+        await Periphery.doBatchCreateDynamicWithMilestonesRaw(
+          BATCH_LOCKUP_DYNAMIC_WITH_MILESTONES
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [isConnected]);
+
+  const onBatchCreateLockupDynamicWithDeltas = useCallback(async () => {
+    if (isConnected) {
+      try {
+        await Periphery.doBatchCreateDynamicWithDeltasRaw(
+          BATCH_LOCKUP_DYNAMIC_WITH_DELTAS
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [isConnected]);
+
+  return (
+    <Wrapper data-style={"batch"}>
+      <Box>
+        <Header>
+          <p>
+            <b>Allow Batch Periphery to spend tokens</b>
+          </p>
+        </Header>
+        <Button onClick={onApproveBatch}>Approve</Button>
+      </Box>
+
+      <div />
+      <Box>
+        <Header>
+          <p>
+            <b>
+              Batch Lockup Linear <span>with Durations</span>
+            </b>
+          </p>
+        </Header>
+        <Button onClick={onBatchCreateLockupLinearWithDurations}>Create</Button>
+      </Box>
+      <Box>
+        <Header data-type={"dynamic"}>
+          <p>
+            <b>
+              Batch Lockup Dynamic <span>with Deltas</span>
+            </b>
+          </p>
+        </Header>
+        <Button onClick={onBatchCreateLockupDynamicWithDeltas}>Create</Button>
+      </Box>
+      <Box>
+        <Header>
+          <p>
+            <b>
+              Batch Lockup Linear <span>with Range</span>
+            </b>
+          </p>
+        </Header>
+        <Button onClick={onBatchCreateLockupLinearWithRange}>Create</Button>
+      </Box>
+      <Box>
+        <Header data-type={"dynamic"}>
+          <p>
+            <b>
+              Batch Lockup Dynamic <span>with Milestones</span>
+            </b>
+          </p>
+        </Header>
+        <Button onClick={onBatchCreateLockupDynamicWithMilestones}>
+          Create
+        </Button>
+      </Box>
+    </Wrapper>
+  );
+}
+
+function Headless() {
+  return (
+    <>
+      <Single />
+      <Divider />
+      <Group />
+    </>
+  );
+}
 export default Headless;

@@ -7,10 +7,10 @@ declare global {
 }
 
 export type IAddress = IViemAddress;
-export type ISeconds = bigint;
-export type IAmount = bigint;
-export type IAmountWithDecimals = bigint;
-export type IAmountWithDecimals18 = bigint;
+export type ISeconds<T extends number | bigint = bigint> = T;
+export type IAmount<T extends number | bigint = bigint> = T;
+export type IAmountWithDecimals<T extends number | bigint = bigint> = T;
+export type IAmountWithDecimals18<T extends number | bigint = bigint> = T;
 
 export interface IStoreFormLinear {
   logs: string[];
@@ -57,8 +57,8 @@ export type ICreateWithDurations = [
   totalAmount: IAmountWithDecimals,
   asset: IAddress,
   cancelable: boolean,
-  durations: [cliff: ISeconds, total: ISeconds],
-  broker: [account: IAddress, fee: 0n] // TIP: you can set this to your own address to charge a fee
+  durations: { cliff: ISeconds; total: ISeconds },
+  broker: { account: IAddress; fee: 0n } // TIP: you can set this to your own address to charge a fee
 ];
 
 export type ICreateWithRange = [
@@ -67,21 +67,21 @@ export type ICreateWithRange = [
   totalAmount: IAmountWithDecimals,
   asset: IAddress,
   cancelable: boolean,
-  range: [start: ISeconds, cliff: ISeconds, end: ISeconds],
-  broker: [account: IAddress, fee: 0n] // TIP: you can set this to your own address to charge a fee
+  range: { start: ISeconds; cliff: ISeconds; end: ISeconds },
+  broker: { account: IAddress; fee: 0n } // TIP: you can set this to your own address to charge a fee
 ];
 
-export type ISegmentD = [
-  amount: IAmountWithDecimals,
-  exponent: IAmountWithDecimals18,
-  delta: ISeconds
-];
+export type ISegmentD<T extends number | bigint = bigint> = {
+  amount: IAmountWithDecimals;
+  exponent: IAmountWithDecimals18;
+  delta: ISeconds<T>;
+};
 
-export type ISegmentM = [
-  amount: IAmountWithDecimals,
-  exponent: IAmountWithDecimals18,
-  milestone: ISeconds
-];
+export type ISegmentM<T extends number | bigint = bigint> = {
+  amount: IAmountWithDecimals;
+  exponent: IAmountWithDecimals18;
+  milestone: ISeconds<T>;
+};
 
 export type ICreateWithDeltas = [
   sender: IAddress,
@@ -89,7 +89,7 @@ export type ICreateWithDeltas = [
   recipient: IAddress,
   totalAmount: IAmountWithDecimals,
   asset: IAddress,
-  broker: [account: IAddress, fee: 0n],
+  broker: { account: IAddress; fee: 0n },
 
   segments: ISegmentD[]
 ];
@@ -101,7 +101,66 @@ export type ICreateWithMilestones = [
   recipient: IAddress,
   totalAmount: IAmountWithDecimals,
   asset: IAddress,
-  broker: [account: IAddress, fee: 0n],
+  broker: { account: IAddress; fee: 0n },
 
   segments: ISegmentM[]
+];
+
+/** --------- */
+
+export type IBatchCreateWithDurations = [
+  lockup: IAddress,
+  asset: IAddress,
+  batch: {
+    sender: IAddress;
+    recipient: IAddress;
+    totalAmount: IAmountWithDecimals;
+    cancelable: boolean;
+    durations: { cliff: ISeconds<number>; total: ISeconds<number> };
+    broker: { account: IAddress; fee: 0n };
+  }[] // Array of batches
+];
+
+export type IBatchCreateWithRange = [
+  lockup: IAddress,
+  asset: IAddress,
+  batch: {
+    sender: IAddress;
+    recipient: IAddress;
+    totalAmount: IAmountWithDecimals;
+    cancelable: boolean;
+    range: {
+      start: ISeconds<number>;
+      cliff: ISeconds<number>;
+      end: ISeconds<number>;
+    };
+    broker: { account: IAddress; fee: 0n };
+  }[] // Array of batches
+];
+
+export type IBatchCreateWithDeltas = [
+  lockup: IAddress,
+  asset: IAddress,
+  batch: {
+    sender: IAddress;
+    cancelable: boolean;
+    recipient: IAddress;
+    totalAmount: IAmountWithDecimals;
+    broker: { account: IAddress; fee: 0n };
+    segments: ISegmentD<number>[];
+  }[] // Array of batches
+];
+
+export type IBatchCreateWithMilestones = [
+  lockup: IAddress,
+  asset: IAddress,
+  batch: {
+    sender: IAddress;
+    startTime: ISeconds<number>;
+    cancelable: boolean;
+    recipient: IAddress;
+    totalAmount: IAmountWithDecimals;
+    broker: { account: IAddress; fee: 0n };
+    segments: ISegmentM<number>[];
+  }[] // Array of batches
 ];

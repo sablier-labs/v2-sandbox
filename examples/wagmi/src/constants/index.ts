@@ -21,6 +21,7 @@ export const contracts = {
       "0x6e3678c005815ab34986d8d66a353cd3699103de" as IAddress,
     SablierV2LockupDynamic:
       "0x4be70ede968e9dba12db42b9869bec66bedc17d7" as IAddress,
+    SablierV2Batch: "0xb9debfd79e5ededaa672fa38f099ddfca7fcb886" as IAddress,
   },
 };
 
