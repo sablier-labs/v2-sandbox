@@ -41,6 +41,39 @@ export function Cancelability() {
   );
 }
 
+export function Transferability() {
+  const { transferability, update } = useFormStore((state) => ({
+    transferability: state.transferability,
+    update: state.api.update,
+  }));
+
+  const onChange = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      const value = (() => {
+        const input = e.target.value;
+
+        return ["true", true].includes(input);
+      })();
+
+      update({ transferability: value });
+    },
+    [update]
+  );
+
+  return (
+    <Select
+      label={"Transferability"}
+      id={"transferability"}
+      value={_.toString(transferability)}
+      source={[
+        { label: "On (Can be transferred later)", value: "true" },
+        { label: "Off (Can never be transferred)", value: "false" },
+      ]}
+      onChange={onChange}
+    />
+  );
+}
+
 export function Token() {
   const { token, update } = useFormStore((state) => ({
     token: state.token,
@@ -69,7 +102,7 @@ export function Token() {
       value={token}
       onChange={onChange}
       format={"text"}
-      placeholder={"Address of the asset..."}
+      placeholder={"Address of the ERC-20 token ..."}
     />
   );
 }
@@ -106,12 +139,12 @@ export function Recipient() {
 
   return (
     <Input
-      label={"Recipient Address"}
+      label={"Recipient"}
       id={"recipient"}
       value={recipient}
       onChange={onChange}
       format={"text"}
-      placeholder={"Recipient 0x address..."}
+      placeholder={"Recipient 0x address ..."}
     />
   );
 }
@@ -154,7 +187,7 @@ export function Amount({ index }: { index: number }) {
       value={segment.amount}
       onChange={onChange}
       format={"text"}
-      placeholder={"Amount streamed this segment (no decimals)..."}
+      placeholder={"Amount streamed this segment, e.g., 100 ..."}
     />
   );
 }
@@ -195,7 +228,7 @@ export function Delta({ index }: { index: number }) {
       value={segment.delta}
       onChange={onChange}
       format={"text"}
-      placeholder={"Duration of this segment e.g. 3600 (1 Hour)..."}
+      placeholder={"Duration of this segment, e.g., 3600 (1 Hour) ..."}
     />
   );
 }
@@ -236,7 +269,7 @@ export function Exponent({ index }: { index: number }) {
       value={segment.exponent}
       onChange={onChange}
       format={"text"}
-      placeholder={"Exponent (e.g. 1 for a straight line)"}
+      placeholder={"Exponent, e.g., 1 for a straight line ..."}
     />
   );
 }

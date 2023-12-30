@@ -3,9 +3,10 @@ import {
   Amount,
   Cancelability,
   Cliff,
-  Token,
-  Recipient,
   Duration,
+  Recipient,
+  Token,
+  Transferability,
 } from "./fields";
 import { useCallback } from "react";
 import { Core, ERC20 } from "../../../models";
@@ -111,21 +112,21 @@ function LockupLinear() {
   return (
     <Wrapper>
       <Cancelability />
+      <Transferability />
       <Token />
       <Amount />
       <Recipient />
       <Duration />
-      <Divider />
       <Cliff />
       <Divider />
       <Actions>
         <Button onClick={onPrefill}>Prefill form</Button>
         <div />
         <Button onClick={onApprove}>Approve token spending</Button>
-        <Button onClick={onCreate}>Create stream</Button>
+        <Button onClick={onCreate}>Create LL stream</Button>
       </Actions>
-      {error ? <Error>{error}</Error> : false}
-      {logs.length ? (
+      {error && <Error>{error}</Error>}
+      {logs.length > 0 && (
         <>
           <Divider />
           <Logs>
@@ -137,8 +138,6 @@ function LockupLinear() {
             </ul>
           </Logs>
         </>
-      ) : (
-        false
       )}
     </Wrapper>
   );

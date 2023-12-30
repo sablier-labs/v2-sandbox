@@ -2,7 +2,7 @@
   "extends": "next/core-web-vitals",
   "overrides": [
     {
-      // Adapt to your needs (e.g. some might want to only override "next.config.js")
+      // Adapt to your needs (you might want to only override "next.config.js")
       "files": ["*.js"],
       // This is the default parser of ESLint
       "parser": "espree",

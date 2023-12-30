@@ -38,7 +38,7 @@ function Home() {
   return (
     <Wrapper>
       <Disclaimer>
-        <p>This Sablier V2 Sandbox is only available on Goerli.</p>
+        <p>The Sablier V2 Sandbox is only available on Sepolia</p>
       </Disclaimer>
       <Container>
         <Account />

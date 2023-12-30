@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useWeb3Context } from "../Web3";
 import { useCallback } from "react";
 import { ERC20 } from "../../models";
-import { DAI, CHAIN_GOERLI_ID } from "../../constants";
+import { SEPOLIA_DAI, SEPOLIA_CHAIN_ID } from "../../constants";
 
 const Wrapper = styled.div`
   display: flex;
@@ -33,7 +33,7 @@ function Account() {
   const onMint = useCallback(async () => {
     if (signer) {
       try {
-        await ERC20.doMint(signer, DAI[CHAIN_GOERLI_ID]);
+        await ERC20.doMint(signer, SEPOLIA_DAI);
       } catch (error) {
         console.error(error);
       }
@@ -73,9 +73,11 @@ function Account() {
           <p>
             <b>Address:</b> {address}
           </p>
-          <Divider />
           <p>
-            <b>Mint Goerli DAI for Tests</b>
+            <b>Sepolia DAI:</b> {SEPOLIA_DAI}
+          </p>
+          <p>
+            <b>Mint Sepolia DAI</b>
             <span> . . . </span>
             <button onClick={onMint}>Mint</button>
           </p>

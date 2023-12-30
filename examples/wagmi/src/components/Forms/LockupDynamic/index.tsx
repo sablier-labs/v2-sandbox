@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Cancelability, Segments, Token, Recipient } from "./fields";
+import { Cancelability, Recipient, Segments, Token, Transferability } from "./fields";
 import { useCallback } from "react";
 import { Core, ERC20 } from "../../../models";
 import useStoreForm, { prefill } from "./store";
@@ -123,10 +123,9 @@ function LockupDynamic() {
   return (
     <Wrapper>
       <Cancelability />
+      <Transferability />
       <Token />
-
       <Recipient />
-      <Divider />
       <Segments />
       <Divider />
       <Actions>
@@ -134,10 +133,10 @@ function LockupDynamic() {
         <Button onClick={onAdd}>Add segment</Button>
         <div />
         <Button onClick={onApprove}>Approve token spending</Button>
-        <Button onClick={onCreate}>Create stream</Button>
+        <Button onClick={onCreate}>Create LD stream</Button>
       </Actions>
-      {error ? <Error>{error}</Error> : false}
-      {logs.length ? (
+      {error && <Error>{error}</Error>}
+      {logs.length > 0 && (
         <>
           <Divider />
           <Logs>
@@ -149,8 +148,6 @@ function LockupDynamic() {
             </ul>
           </Logs>
         </>
-      ) : (
-        false
       )}
     </Wrapper>
   );

@@ -5,8 +5,8 @@ import { useCallback } from "react";
 import _ from "lodash";
 import {
   APPROVE_BATCH,
-  APPROVE_LINEAR,
-  APPROVE_DYNAMIC,
+  APPROVE_LOCKUP_LINEAR,
+  APPROVE_LOCKUP_DYNAMIC,
   BATCH_LOCKUP_LINEAR_WITH_DURATIONS,
   BATCH_LOCKUP_LINEAR_WITH_RANGE,
   BATCH_LOCKUP_DYNAMIC_WITH_MILESTONES,
@@ -88,7 +88,7 @@ function Single() {
       try {
         await ERC20.doApprove(
           signer,
-          ...APPROVE_LINEAR,
+          ...APPROVE_LOCKUP_LINEAR,
           (_value: string) => {}
         );
       } catch (error) {
@@ -102,7 +102,7 @@ function Single() {
       try {
         await ERC20.doApprove(
           signer,
-          ...APPROVE_DYNAMIC,
+          ...APPROVE_LOCKUP_DYNAMIC,
           (_value: string) => {}
         );
       } catch (error) {
@@ -165,7 +165,7 @@ function Single() {
       <Box>
         <Header>
           <p>
-            <b>Allow Lockup Linear to spend tokens</b>
+            <b>Allow Lockup Linear to spend DAI</b>
           </p>
         </Header>
         <Button onClick={onApproveLinear}>Approve</Button>
@@ -174,7 +174,7 @@ function Single() {
       <Box>
         <Header>
           <p>
-            <b>Allow Lockup Dynamic to spend tokens</b>
+            <b>Allow Lockup Dynamic to spend DAI</b>
           </p>
         </Header>
         <Button onClick={onApproveDynamic}>Approve</Button>
@@ -183,7 +183,7 @@ function Single() {
         <Header>
           <p>
             <b>
-              Linear Lockup stream <span>with Durations</span>
+              Lockup Linear stream <span>with Durations</span>
             </b>
           </p>
         </Header>
@@ -194,7 +194,7 @@ function Single() {
         <Header data-type={"dynamic"}>
           <p>
             <b>
-              Linear Dynamic stream <span>with Deltas</span>
+              Lockup Dynamic stream <span>with Deltas</span>
             </b>
           </p>
         </Header>
@@ -204,7 +204,7 @@ function Single() {
         <Header>
           <p>
             <b>
-              Linear Lockup stream <span>with Range</span>
+              Lockup Linear stream <span>with Range</span>
             </b>
           </p>
         </Header>
@@ -214,7 +214,7 @@ function Single() {
         <Header data-type={"dynamic"}>
           <p>
             <b>
-              Linear Dynamic stream <span>with Milestones</span>
+              Lockup Dynamic stream <span>with Milestones</span>
             </b>
           </p>
         </Header>
@@ -294,7 +294,7 @@ function Group() {
       <Box>
         <Header>
           <p>
-            <b>Allow Batch Periphery to spend tokens</b>
+            <b>Allow Batch Periphery to spend DAI</b>
           </p>
         </Header>
         <Button onClick={onApproveBatch}>Approve</Button>
