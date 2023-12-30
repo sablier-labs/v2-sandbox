@@ -17,9 +17,10 @@ export interface IStoreFormLinear {
   amount: string | undefined;
   cancelability: boolean;
   cliff: string | undefined;
+  duration: string | undefined;
   recipient: string | undefined;
   token: string | undefined;
-  duration: string | undefined;
+  transferability: boolean;
 
   api: {
     log: (value: string) => void;
@@ -35,6 +36,7 @@ export interface IStoreFormDynamic {
   cancelability: boolean;
   recipient: string | undefined;
   token: string | undefined;
+  transferability: boolean;
 
   segments: {
     amount: string | undefined;
@@ -55,6 +57,7 @@ export type ICreateWithDurations = [
   totalAmount: IAmountWithDecimals,
   asset: IAddress,
   cancelable: boolean,
+  transferable: boolean,
   durations: [cliff: ISeconds, total: ISeconds],
   broker: [account: IAddress, fee: 0n] // TIP: you can set this to your own address to charge a fee
 ];
@@ -65,6 +68,7 @@ export type ICreateWithRange = [
   totalAmount: IAmountWithDecimals,
   asset: IAddress,
   cancelable: boolean,
+  transferable: boolean,
   range: [start: ISeconds, cliff: ISeconds, end: ISeconds],
   broker: [account: IAddress, fee: 0n] // TIP: you can set this to your own address to charge a fee
 ];
@@ -84,6 +88,7 @@ export type ISegmentM = [
 export type ICreateWithDeltas = [
   sender: IAddress,
   cancelable: boolean,
+  transferable: boolean,
   recipient: IAddress,
   totalAmount: IAmountWithDecimals,
   asset: IAddress,
@@ -96,6 +101,7 @@ export type ICreateWithMilestones = [
   sender: IAddress,
   startTime: ISeconds,
   cancelable: boolean,
+  transferable: boolean,
   recipient: IAddress,
   totalAmount: IAmountWithDecimals,
   asset: IAddress,
@@ -114,6 +120,7 @@ export type IBatchCreateWithDurations = [
     recipient: IAddress,
     totalAmount: IAmountWithDecimals,
     cancelable: boolean,
+    transferable: boolean,
     durations: [cliff: ISeconds, total: ISeconds],
     broker: [account: IAddress, fee: 0n]
   ][] // Array of batches
@@ -127,6 +134,7 @@ export type IBatchCreateWithRange = [
     recipient: IAddress,
     totalAmount: IAmountWithDecimals,
     cancelable: boolean,
+    transferable: boolean,
     range: [start: ISeconds, cliff: ISeconds, end: ISeconds],
     broker: [account: IAddress, fee: 0n]
   ][] // Array of batches
@@ -137,11 +145,12 @@ export type IBatchCreateWithDeltas = [
   asset: IAddress,
   batch: [
     sender: IAddress,
-    cancelable: boolean,
     recipient: IAddress,
     totalAmount: IAmountWithDecimals,
+    cancelable: boolean,
+    transferable: boolean,
+    segments: ISegmentD[],
     broker: [account: IAddress, fee: 0n],
-    segments: ISegmentD[]
   ][] // Array of batches
 ];
 
@@ -150,11 +159,12 @@ export type IBatchCreateWithMilestones = [
   asset: IAddress,
   batch: [
     sender: IAddress,
-    startTime: ISeconds,
-    cancelable: boolean,
     recipient: IAddress,
     totalAmount: IAmountWithDecimals,
+    startTime: ISeconds,
+    cancelable: boolean,
+    transferable: boolean,
+    segments: ISegmentM[],
     broker: [account: IAddress, fee: 0n],
-    segments: ISegmentM[]
   ][] // Array of batches
 ];

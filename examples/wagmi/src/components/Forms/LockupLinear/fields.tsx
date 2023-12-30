@@ -39,6 +39,39 @@ export function Cancelability() {
   );
 }
 
+export function Transferability() {
+  const { transferability, update } = useFormStore((state) => ({
+    transferability: state.transferability,
+    update: state.api.update,
+  }));
+
+  const onChange = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      const value = (() => {
+        const input = e.target.value;
+
+        return ["true", true].includes(input);
+      })();
+
+      update({ transferability: value });
+    },
+    [update]
+  );
+
+  return (
+    <Select
+      label={"Transferability"}
+      id={"transferability"}
+      value={_.toString(transferability)}
+      source={[
+        { label: "On (Can be transferred later)", value: "true" },
+        { label: "Off (Can never be transferred)", value: "false" },
+      ]}
+      onChange={onChange}
+    />
+  );
+}
+
 export function Token() {
   const { token, update } = useFormStore((state) => ({
     token: state.token,
@@ -67,7 +100,7 @@ export function Token() {
       value={token}
       onChange={onChange}
       format={"text"}
-      placeholder={"Address of the asset..."}
+      placeholder={"Address of the ERC-20 token ..."}
     />
   );
 }
@@ -106,7 +139,7 @@ export function Amount() {
       value={amount}
       onChange={onChange}
       format={"text"}
-      placeholder={"Amount to be streamed (no decimals)..."}
+      placeholder={"Amount to be streamed, e.g., 100 ..."}
     />
   );
 }
@@ -143,12 +176,12 @@ export function Recipient() {
 
   return (
     <Input
-      label={"Recipient Address"}
+      label={"Recipient"}
       id={"recipient"}
       value={recipient}
       onChange={onChange}
       format={"text"}
-      placeholder={"Recipient 0x address..."}
+      placeholder={"Recipient 0x address ..."}
     />
   );
 }
@@ -185,7 +218,7 @@ export function Duration() {
       value={duration}
       onChange={onChange}
       format={"text"}
-      placeholder={"Duration in seconds e.g. 86400 (1 Day)..."}
+      placeholder={"Duration in seconds, e.g., 86400 (1 Day) ..."}
     />
   );
 }
@@ -217,12 +250,12 @@ export function Cliff() {
 
   return (
     <Input
-      label={"Cliff"}
+      label={"Cliff (Optional)"}
       id={"cliff"}
       value={cliff}
       onChange={onChange}
       format={"text"}
-      placeholder={"Cliff in seconds e.g. 3600 (1 Hour)..."}
+      placeholder={"Cliff in seconds, e.g., 0 or 3600 (1 Hour) ..."}
     />
   );
 }

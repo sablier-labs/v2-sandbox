@@ -135,10 +135,10 @@ function LockupDynamic() {
         <Button onClick={onAdd}>Add segment</Button>
         <div />
         <Button onClick={onApprove}>Approve token spending</Button>
-        <Button onClick={onCreate}>Create stream</Button>
+        <Button onClick={onCreate}>Create LD stream</Button>
       </Actions>
-      {error ? <Error>{error}</Error> : false}
-      {logs.length ? (
+      {error && <Error>{error}</Error>}
+      {logs.length > 0 && (
         <>
           <Divider />
           <Logs>
@@ -150,8 +150,6 @@ function LockupDynamic() {
             </ul>
           </Logs>
         </>
-      ) : (
-        false
       )}
     </Wrapper>
   );

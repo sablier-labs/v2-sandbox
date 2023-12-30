@@ -24,7 +24,7 @@ It is worth noting that you can charge a service fee when creating a stream. Thi
 
 ### Ethers V6
 
-An integration of the [Sablier V2 Core](https://github.com/sablier-labs/v2-core) contracts into a frontend environment that uses [Ethers V6](https://docs.ethers.org/v6/). It's a small app that runs on the Goerli testnet and provides a wallet connection out of the box (Injected / Metamask).
+An integration of the [Sablier V2 Core](https://github.com/sablier-labs/v2-core) contracts into a frontend environment that uses [Ethers V6](https://docs.ethers.org/v6/). It's a small app that runs on the Sepolia testnet and provides an injected wallet connection out of the box.
 
 | Lockup Linear (Form)                       | Lockup Dynamic (Form)                       | Headless                             |
 | ------------------------------------------ | ------------------------------------------- | ------------------------------------ |
@@ -40,7 +40,7 @@ An integration of the [Sablier V2 Core](https://github.com/sablier-labs/v2-core)
 - Create a LL stream with Range in headless mode (tweak dates/ranges in code)
 - Create a LD stream with Deltas in headless mode (tweak deltas in code)
 - Create a LD stream with Milestones in headless mode (tweak milestones in code)
-- Mint [testnet DAI](https://goerli.etherscan.io/token/0x97cb342cf2f6ecf48c1285fb8668f5a4237bf862) tokens
+- Mint [Sepolia DAI](https://sepolia.etherscan.io/token/0x776b6fc2ed15d6bb5fc32e0c89de68683118c62a) tokens
 - Approve spending DAI tokens for both the LL and LD contracts
 
 **↪ Batch stream creation through Core**

@@ -1,6 +1,6 @@
 import _ from "lodash";
 import type { IAddress } from "../types";
-import { CHAIN_GOERLI_ID, contracts, ABI } from "../constants";
+import { SEPOLIA_CHAIN_ID, contracts, ABI } from "../constants";
 import { Contract, ethers } from "ethers";
 import BigNumber from "bignumber.js";
 import { expect, erroneous } from "../utils";
@@ -8,7 +8,7 @@ import { expect, erroneous } from "../utils";
 export default class ERC20 {
   static async doApprove(
     signer: ethers.Signer,
-    spender: keyof (typeof contracts)[typeof CHAIN_GOERLI_ID],
+    spender: keyof (typeof contracts)[typeof SEPOLIA_CHAIN_ID],
     state: {
       amount: string | undefined;
       token: string | undefined;
@@ -25,7 +25,7 @@ export default class ERC20 {
       const amount = BigInt(state.amount) * 10n ** decimals;
 
       const tx = await contract_token.approve.send(
-        contracts[CHAIN_GOERLI_ID][spender],
+        contracts[SEPOLIA_CHAIN_ID][spender],
         amount
       );
 
@@ -35,7 +35,7 @@ export default class ERC20 {
 
       const receipt = await tx.wait();
       if (receipt?.status === 1) {
-        log(`Token approval successfully registered.`);
+        log(`Token approval executed successfully.`);
       } else {
         log(`Token approval failed.`);
       }
@@ -47,6 +47,7 @@ export default class ERC20 {
   static async doMint(signer: ethers.Signer, token: IAddress) {
     try {
       if (!expect(token, "token")) {
+        console.error("token is undefined");
         return;
       }
 

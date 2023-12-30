@@ -1,6 +1,8 @@
 import { shallow } from "zustand/shallow";
 import { createWithEqualityFn } from "zustand/traditional";
-import type { IAmountWithDecimals18, IStoreFormDynamic } from "../../../types";
+import { SEPOLIA_DAI } from "../../../constants";
+import type { IStoreFormDynamic } from "../../../types";
+
 
 const initial: Omit<IStoreFormDynamic, "api"> = {
   error: undefined,
@@ -8,7 +10,6 @@ const initial: Omit<IStoreFormDynamic, "api"> = {
 
   cancelability: true,
   recipient: undefined,
-  token: undefined,
   segments: [
     {
       amount: undefined,
@@ -16,6 +17,8 @@ const initial: Omit<IStoreFormDynamic, "api"> = {
       exponent: undefined,
     },
   ],
+  token: undefined,
+  transferability: true,
 };
 
 const prefill: Omit<IStoreFormDynamic, "api"> = {
@@ -23,12 +26,14 @@ const prefill: Omit<IStoreFormDynamic, "api"> = {
   logs: [],
 
   cancelability: true,
-  recipient: "0x727a6B434843120B9e0186064eb040032ad95f26",
-  token: "0x97cb342cf2f6ecf48c1285fb8668f5a4237bf862",
+  recipient: "0xCAFE000000000000000000000000000000000000",
+  token: SEPOLIA_DAI,
+  transferability: true,
+  
   segments: [
     {
       amount: "0",
-      delta: "43199", // 12h - 1 second
+      delta: "43199", // 12hrs - 1 second
       exponent: "1",
     },
     {
@@ -38,7 +43,7 @@ const prefill: Omit<IStoreFormDynamic, "api"> = {
     },
     {
       amount: "0",
-      delta: "43199", // 12h - 1 second
+      delta: "43199", // 12hrs - 1 second
       exponent: "1",
     },
     {

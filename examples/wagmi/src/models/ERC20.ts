@@ -1,6 +1,6 @@
 import _ from "lodash";
 import type { IAddress } from "../types";
-import { CHAIN_GOERLI_ID, contracts, ABI } from "../constants";
+import { SEPOLIA_CHAIN_ID, contracts, ABI } from "../constants";
 import {
   getAccount,
   readContract,
@@ -12,7 +12,7 @@ import { expect, erroneous } from "../utils";
 
 export default class ERC20 {
   static async doApprove(
-    spender: keyof (typeof contracts)[typeof CHAIN_GOERLI_ID],
+    spender: keyof (typeof contracts)[typeof SEPOLIA_CHAIN_ID],
     state: {
       amount: string | undefined;
       token: string | undefined;
@@ -36,7 +36,7 @@ export default class ERC20 {
         address: state.token as IAddress,
         abi: ABI.ERC20.abi,
         functionName: "approve",
-        args: [contracts[CHAIN_GOERLI_ID][spender], amount],
+        args: [contracts[SEPOLIA_CHAIN_ID][spender], amount],
       });
 
       if (tx.hash) {
@@ -46,7 +46,7 @@ export default class ERC20 {
       const receipt = await waitForTransaction({ hash: tx.hash });
 
       if (receipt?.status === "success") {
-        log(`Token approval successfully registered.`);
+        log(`Token approval executed successfully.`);
       } else {
         log(`Token approval failed.`);
       }
@@ -58,6 +58,7 @@ export default class ERC20 {
   static async doMint(token: IAddress) {
     try {
       if (!expect(token, "token")) {
+        console.error("token is undefined");
         return;
       }
 
@@ -73,6 +74,7 @@ export default class ERC20 {
 
       const sender = await getAccount().address;
       if (!expect(sender, "sender")) {
+        console.error("sender is undefined");
         return;
       }
 

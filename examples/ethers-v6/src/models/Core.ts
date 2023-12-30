@@ -9,7 +9,7 @@ import type {
   ISegmentD,
   ICreateWithRange,
 } from "../types";
-import { CHAIN_GOERLI_ID, contracts, ABI } from "../constants";
+import { SEPOLIA_CHAIN_ID, contracts, ABI } from "../constants";
 
 import { Contract, ethers } from "ethers";
 import BigNumber from "bignumber.js";
@@ -22,9 +22,10 @@ export default class Core {
       amount: string | undefined;
       cancelability: boolean;
       cliff: string | undefined;
+      duration: string | undefined;
       recipient: string | undefined;
       token: string | undefined;
-      duration: string | undefined;
+      transferability: boolean;
     },
     log: (value: string) => void
   ) {
@@ -34,7 +35,8 @@ export default class Core {
         !expect(state.cancelability, "cancelability") ||
         !expect(state.duration, "duration") ||
         !expect(state.recipient, "recipient") ||
-        !expect(state.token, "token")
+        !expect(state.token, "token") ||
+        !expect(state.transferability, "transferability")
       ) {
         return;
       }
@@ -50,7 +52,7 @@ export default class Core {
 
       const sender = await signer.getAddress();
       const contract_lockup = new Contract(
-        contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
+        contracts[SEPOLIA_CHAIN_ID].SablierV2LockupLinear,
         ABI.SablierV2LockupLinear.abi,
         signer
       );
@@ -73,6 +75,7 @@ export default class Core {
         amount,
         state.token,
         state.cancelability,
+        state.transferability,
         [cliff, BigInt(state.duration)],
         [ethers.ZeroAddress, 0n],
       ];
@@ -101,12 +104,13 @@ export default class Core {
     state: {
       cancelability: boolean;
       recipient: string | undefined;
-      token: string | undefined;
       segments: {
         amount: string | undefined;
         delta: string | undefined;
         exponent: string | undefined;
       }[];
+      token: string | undefined;
+      transferability: boolean;
     },
     log: (value: string) => void
   ) {
@@ -115,7 +119,8 @@ export default class Core {
         !expect(state.segments, "segments") ||
         !expect(state.cancelability, "cancelability") ||
         !expect(state.recipient, "recipient") ||
-        !expect(state.token, "token")
+        !expect(state.token, "token") ||
+        !expect(state.transferability, "transferability")
       ) {
         return;
       }
@@ -148,7 +153,7 @@ export default class Core {
 
       const sender = await signer.getAddress();
       const contract_lockup = new Contract(
-        contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
+        contracts[SEPOLIA_CHAIN_ID].SablierV2LockupDynamic,
         ABI.SablierV2LockupDynamic.abi,
         signer
       );
@@ -161,6 +166,7 @@ export default class Core {
       const payload: ICreateWithDeltas = [
         sender,
         state.cancelability,
+        state.transferability,
         state.recipient,
         amount,
         state.token,
@@ -192,7 +198,7 @@ export default class Core {
     payload: ICreateWithDurations
   ) {
     const contract_lockup = new Contract(
-      contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
+      contracts[SEPOLIA_CHAIN_ID].SablierV2LockupLinear,
       ABI.SablierV2LockupLinear.abi,
       signer
     );
@@ -213,7 +219,7 @@ export default class Core {
     payload: ICreateWithRange
   ) {
     const contract_lockup = new Contract(
-      contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
+      contracts[SEPOLIA_CHAIN_ID].SablierV2LockupLinear,
       ABI.SablierV2LockupLinear.abi,
       signer
     );
@@ -234,7 +240,7 @@ export default class Core {
     payload: ICreateWithDeltas
   ) {
     const contract_lockup = new Contract(
-      contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
+      contracts[SEPOLIA_CHAIN_ID].SablierV2LockupDynamic,
       ABI.SablierV2LockupDynamic.abi,
       signer
     );
@@ -255,7 +261,7 @@ export default class Core {
     payload: ICreateWithMilestones
   ) {
     const contract_lockup = new Contract(
-      contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
+      contracts[SEPOLIA_CHAIN_ID].SablierV2LockupDynamic,
       ABI.SablierV2LockupDynamic.abi,
       signer
     );

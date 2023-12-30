@@ -2,11 +2,11 @@ import { useEffect, type PropsWithChildren, useState } from "react";
 import _ from "lodash";
 
 import { WagmiConfig, configureChains, createConfig, useConnect } from "wagmi";
-import { goerli } from "wagmi/chains";
+import { sepolia } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { InjectedConnector } from "wagmi/connectors/injected";
 
-const { chains, publicClient } = configureChains([goerli], [publicProvider()]);
+const { chains, publicClient } = configureChains([sepolia], [publicProvider()]);
 
 const config = createConfig({
   autoConnect: true,

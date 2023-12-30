@@ -11,7 +11,7 @@ import type {
   ICreateWithRange,
   IAddress,
 } from "../types";
-import { CHAIN_GOERLI_ID, contracts, ABI } from "../constants";
+import { SEPOLIA_CHAIN_ID, contracts, ABI } from "../constants";
 import { zeroAddress } from "viem";
 import {
   getAccount,
@@ -28,9 +28,10 @@ export default class Core {
       amount: string | undefined;
       cancelability: boolean;
       cliff: string | undefined;
+      duration: string | undefined;
       recipient: string | undefined;
       token: string | undefined;
-      duration: string | undefined;
+      transferability: boolean;
     },
     log: (value: string) => void
   ) {
@@ -40,7 +41,8 @@ export default class Core {
         !expect(state.cancelability, "cancelability") ||
         !expect(state.duration, "duration") ||
         !expect(state.recipient, "recipient") ||
-        !expect(state.token, "token")
+        !expect(state.token, "token") ||
+        !expect(state.transferability, "transferability")
       ) {
         return;
       }
@@ -80,6 +82,7 @@ export default class Core {
         amount,
         state.token as IAddress,
         state.cancelability,
+        state.transferability,
         { cliff, total: BigInt(state.duration) },
         { account: zeroAddress, fee: 0n },
       ];
@@ -87,7 +90,7 @@ export default class Core {
       console.info("Payload", payload);
 
       const tx = await writeContract({
-        address: contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
+        address: contracts[SEPOLIA_CHAIN_ID].SablierV2LockupLinear,
         abi: ABI.SablierV2LockupLinear.abi,
         functionName: "createWithDurations",
         args: [payload],
@@ -113,12 +116,13 @@ export default class Core {
     state: {
       cancelability: boolean;
       recipient: string | undefined;
-      token: string | undefined;
       segments: {
         amount: string | undefined;
         delta: string | undefined;
         exponent: string | undefined;
       }[];
+      token: string | undefined;
+      transferability: boolean;
     },
     log: (value: string) => void
   ) {
@@ -127,7 +131,8 @@ export default class Core {
         !expect(state.segments, "segments") ||
         !expect(state.cancelability, "cancelability") ||
         !expect(state.recipient, "recipient") ||
-        !expect(state.token, "token")
+        !expect(state.token, "token") ||
+        !expect(state.transferability, "transferability")
       ) {
         return;
       }
@@ -175,6 +180,7 @@ export default class Core {
       const payload: ICreateWithDeltas = [
         sender,
         state.cancelability,
+        state.transferability,
         state.recipient as IAddress,
         amount,
         state.token as IAddress,
@@ -185,7 +191,7 @@ export default class Core {
       console.info("Payload", payload);
 
       const tx = await writeContract({
-        address: contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
+        address: contracts[SEPOLIA_CHAIN_ID].SablierV2LockupDynamic,
         abi: ABI.SablierV2LockupDynamic.abi,
         functionName: "createWithDeltas",
         args: [payload],
@@ -220,7 +226,7 @@ export default class Core {
     console.info("Payload", data);
 
     const tx = await writeContract({
-      address: contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
+      address: contracts[SEPOLIA_CHAIN_ID].SablierV2LockupLinear,
       abi: ABI.SablierV2LockupLinear.abi,
       functionName: "createWithDurations",
       args: [data],
@@ -241,7 +247,7 @@ export default class Core {
     console.info("Payload", data);
 
     const tx = await writeContract({
-      address: contracts[CHAIN_GOERLI_ID].SablierV2LockupLinear,
+      address: contracts[SEPOLIA_CHAIN_ID].SablierV2LockupLinear,
       abi: ABI.SablierV2LockupLinear.abi,
       functionName: "createWithRange",
       args: [data],
@@ -262,7 +268,7 @@ export default class Core {
     console.info("Payload", data);
 
     const tx = await writeContract({
-      address: contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
+      address: contracts[SEPOLIA_CHAIN_ID].SablierV2LockupDynamic,
       abi: ABI.SablierV2LockupDynamic.abi,
       functionName: "createWithDeltas",
       args: [data],
@@ -285,7 +291,7 @@ export default class Core {
     console.info("Payload", data);
 
     const tx = await writeContract({
-      address: contracts[CHAIN_GOERLI_ID].SablierV2LockupDynamic,
+      address: contracts[SEPOLIA_CHAIN_ID].SablierV2LockupDynamic,
       abi: ABI.SablierV2LockupDynamic.abi,
       functionName: "createWithMilestones",
       args: [data],

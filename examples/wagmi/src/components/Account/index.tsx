@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { useCallback } from "react";
 import { ERC20 } from "../../models";
 import { useAccount, useConnect, useWalletClient } from "wagmi";
-import { DAI, CHAIN_GOERLI_ID } from "../../constants";
+import { SEPOLIA_DAI, SEPOLIA_CHAIN_ID } from "../../constants";
 import { InjectedConnector } from "wagmi/connectors/injected";
 
 const Wrapper = styled.div`
@@ -38,7 +38,7 @@ function Account() {
   const onMint = useCallback(async () => {
     if (walletClient) {
       try {
-        await ERC20.doMint(DAI[CHAIN_GOERLI_ID]);
+        await ERC20.doMint(SEPOLIA_DAI);
       } catch (error) {
         console.error(error);
       }
@@ -86,12 +86,15 @@ function Account() {
           <p>
             <b>Address:</b> {address}
           </p>
-          <Divider />
           <p>
-            <b>Mint Goerli DAI for Tests</b>
+            <b>Sepolia DAI:</b> {SEPOLIA_DAI}
+          </p>
+          <p>
+            <b>Mint Sepolia DAI</b>
             <span> . . . </span>
             <button onClick={onMint}>Mint</button>
           </p>
+         
         </>
       ) : (
         false

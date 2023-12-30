@@ -1,6 +1,6 @@
 {
-  "name": "@sablier/v2-sandbox-ethers-v6",
-  "version": "0.1.0",
+  "name": "@sablier/v2-sandbox-ethers",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,8 +10,9 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
-    "@openzeppelin/contracts": "^4.9.3",
-    "@sablier/v2-core": "^1.0.2",
+    "@openzeppelin/contracts": "4.9.2",
+    "@sablier/v2-core": "1.1.2",
+    "@sablier/v2-periphery": "^1.1.1",
     "bignumber.js": "^9.1.2",
     "cross-fetch": "^4.0.0",
     "ethers": "^6.8.1",

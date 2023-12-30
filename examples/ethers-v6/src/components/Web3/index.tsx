@@ -32,7 +32,7 @@ function useWeb3() {
       console.error("MetaMask not installed; using read-only defaults");
 
       (async () => {
-        const provider = ethers.getDefaultProvider("goerli");
+        const provider = ethers.getDefaultProvider("sepolia");
         const chain = await provider.getNetwork();
 
         setData({
@@ -48,7 +48,7 @@ function useWeb3() {
         try {
           const provider = new ethers.BrowserProvider(
             window.ethereum,
-            "goerli"
+            "sepolia"
           );
           const signer = await provider.getSigner();
           const address = await signer.getAddress();
@@ -67,7 +67,7 @@ function useWeb3() {
             setData({
               ...initial,
               status: "disconnected",
-              error: "Expected network: Goerli",
+              error: "Expected network: Sepolia",
             });
           }
           if (_.get(error, "code") === "ACTION_REJECTED") {

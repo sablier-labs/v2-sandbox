@@ -215,7 +215,7 @@ export default {
       name: "Transfer",
       type: "event",
     },
-    /** Special method only available in our special Goerli DAI */
+    /** Special testing method available only in our Sepolia DAI */
     {
       constant: false,
       inputs: [
@@ -228,6 +228,7 @@ export default {
           type: "uint256",
         },
       ],
+      outputs: [],
       name: "mint",
       payable: false,
       stateMutability: "nonpayable",

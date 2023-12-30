@@ -87,9 +87,9 @@ function Forms() {
           <p>Headless</p>
         </Tab>
       </Tabs>
-      {tab === 0 ? <LockupLinear /> : false}
-      {tab === 1 ? <LockupDynamic /> : false}
-      {tab === 2 ? <Headless /> : false}
+      {tab === 0 && <LockupLinear />}
+      {tab === 1 && <LockupDynamic />}
+      {tab === 2 && <Headless />}
     </Wrapper>
   );
 }
