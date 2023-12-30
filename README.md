@@ -101,18 +101,3 @@ always choose to implement them differently. For example, using:
   more or less a wrapper around viem's utilities, with the additional benefit that the wallet and public clients are
   automatically sourced behind the scenes (you don't have to pass them manually).
 - Wagmi's hooks, for a more effect oriented React application
-
-## Specialized Branches
-
-This repository houses a few specialized branches. Outside of `main`, these other branches are used for non-general
-use-cases, experiments or customer-support.
-
-#### feat/permit2
-
-The [`feat/permit2`](https://github.com/sablier-labs/v2-sandbox/tree/feat/permit2) branch showcases **a create linear
-stream flow** using:
-
-- Permit2 signatures
-- The PRB Proxy
-- A dedicated Sablier V2 Proxy Target
-- The `wagmi` example
