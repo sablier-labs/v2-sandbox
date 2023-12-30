@@ -1,0 +1,14 @@
+# directories
+**/.next
+**/node_modules
+
+# files
+*.env
+*.log
+*.tsbuildinfo
+.DS_Store
+.pnp.*
+next-env.d.ts
+npm-debug.log
+package-lock.json
+yarn.lock

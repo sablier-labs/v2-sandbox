@@ -1,16 +1,15 @@
 import type {
-  IBatchCreateWithRange,
-  IBatchCreateWithDurations,
-  IBatchCreateWithDeltas,
-  IBatchCreateWithMilestones,
-  ICreateWithRange,
-  ICreateWithDurations,
-  ICreateWithDeltas,
-  ICreateWithMilestones,
   IAddress,
+  IBatchCreateWithDeltas,
+  IBatchCreateWithDurations,
+  IBatchCreateWithMilestones,
+  IBatchCreateWithRange,
+  ICreateWithDeltas,
+  ICreateWithDurations,
+  ICreateWithMilestones,
+  ICreateWithRange,
 } from "../types";
 import { SEPOLIA_CHAIN_ID } from "./chains";
-
 import { contracts } from "./contracts";
 import { SEPOLIA_DAI } from "./contracts";
 
@@ -196,61 +195,60 @@ export const BATCH_LOCKUP_LINEAR_WITH_RANGE: IBatchCreateWithRange = [
   ],
 ];
 
-export const BATCH_LOCKUP_DYNAMIC_WITH_MILESTONES: IBatchCreateWithMilestones =
+export const BATCH_LOCKUP_DYNAMIC_WITH_MILESTONES: IBatchCreateWithMilestones = [
+  contracts[SEPOLIA_CHAIN_ID].SablierV2LockupDynamic,
+  SEPOLIA_DAI,
   [
-    contracts[SEPOLIA_CHAIN_ID].SablierV2LockupDynamic,
-    SEPOLIA_DAI,
-    [
-      {
-        sender: "<< YOUR CONNECTED ADDRESS AS THE SENDER >>" as IAddress, // Sender address
-        startTime: now_n, // August 25th, 2023 21:46:40 GMT
-        cancelable: true, // Cancelable
-        transferable: true, // Transferable
-        recipient: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045" as IAddress, // Recipient address
-        totalAmount: 1000n * 10n ** 18n, // 1000 DAI (18 decimals)
-        broker: {
-          account: "0x0000000000000000000000000000000000000000",
-          fee: 0n,
-        }, // Broker - set this to your own address to charge a fee
-        segments: [
-          {
-            amount: 250n * 10n ** 18n,
-            exponent: 3n * 10n ** 18n,
-            milestone: now_n + 86400 * 1,
-          }, // Distribute DAI 250 exponentially (exponent = 3), by the end of the first day
-          {
-            amount: 750n * 10n ** 18n,
-            exponent: 3n * 10n ** 18n,
-            milestone: now_n + 86400 * 30,
-          }, // Distribute another DAI 750 exponentially (exponent = 3), by the end of the month (30 days)
-        ],
-      },
-      {
-        sender: "<< YOUR CONNECTED ADDRESS AS THE SENDER >>" as IAddress, // Sender address
-        startTime: now_n, // August 25th, 2023 21:46:40 GMT
-        cancelable: true, // Cancelable
-        transferable: true, // Transferable
-        recipient: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045" as IAddress, // Recipient address
-        totalAmount: 2000n * 10n ** 18n, // 2000 DAI (18 decimals)
-        broker: {
-          account: "0x0000000000000000000000000000000000000000",
-          fee: 0n,
-        }, // Broker - set this to your own address to charge a fee
-        segments: [
-          {
-            amount: 1250n * 10n ** 18n,
-            exponent: 3n * 10n ** 18n,
-            milestone: now_n + 86400 * 1,
-          }, // Distribute DAI 1250 exponentially (exponent = 3), by the end of the first day
-          {
-            amount: 750n * 10n ** 18n,
-            exponent: 3n * 10n ** 18n,
-            milestone: now_n + 86400 * 30,
-          }, // Distribute another DAI 750 exponentially (exponent = 3), by the end of the month (30 days)
-        ],
-      },
-    ],
-  ];
+    {
+      sender: "<< YOUR CONNECTED ADDRESS AS THE SENDER >>" as IAddress, // Sender address
+      startTime: now_n, // August 25th, 2023 21:46:40 GMT
+      cancelable: true, // Cancelable
+      transferable: true, // Transferable
+      recipient: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045" as IAddress, // Recipient address
+      totalAmount: 1000n * 10n ** 18n, // 1000 DAI (18 decimals)
+      broker: {
+        account: "0x0000000000000000000000000000000000000000",
+        fee: 0n,
+      }, // Broker - set this to your own address to charge a fee
+      segments: [
+        {
+          amount: 250n * 10n ** 18n,
+          exponent: 3n * 10n ** 18n,
+          milestone: now_n + 86400 * 1,
+        }, // Distribute DAI 250 exponentially (exponent = 3), by the end of the first day
+        {
+          amount: 750n * 10n ** 18n,
+          exponent: 3n * 10n ** 18n,
+          milestone: now_n + 86400 * 30,
+        }, // Distribute another DAI 750 exponentially (exponent = 3), by the end of the month (30 days)
+      ],
+    },
+    {
+      sender: "<< YOUR CONNECTED ADDRESS AS THE SENDER >>" as IAddress, // Sender address
+      startTime: now_n, // August 25th, 2023 21:46:40 GMT
+      cancelable: true, // Cancelable
+      transferable: true, // Transferable
+      recipient: "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045" as IAddress, // Recipient address
+      totalAmount: 2000n * 10n ** 18n, // 2000 DAI (18 decimals)
+      broker: {
+        account: "0x0000000000000000000000000000000000000000",
+        fee: 0n,
+      }, // Broker - set this to your own address to charge a fee
+      segments: [
+        {
+          amount: 1250n * 10n ** 18n,
+          exponent: 3n * 10n ** 18n,
+          milestone: now_n + 86400 * 1,
+        }, // Distribute DAI 1250 exponentially (exponent = 3), by the end of the first day
+        {
+          amount: 750n * 10n ** 18n,
+          exponent: 3n * 10n ** 18n,
+          milestone: now_n + 86400 * 30,
+        }, // Distribute another DAI 750 exponentially (exponent = 3), by the end of the month (30 days)
+      ],
+    },
+  ],
+];
 
 /** 🚨🕣 The END DATE (last parameter in the range tuple) has to be in the future. Make sure to move it at least a few hours after the current moment */
 export const BATCH_LOCKUP_DYNAMIC_WITH_DELTAS: IBatchCreateWithDeltas = [

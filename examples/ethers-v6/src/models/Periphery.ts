@@ -1,23 +1,16 @@
+import { Contract, ethers } from "ethers";
 import _ from "lodash";
+import { ABI, SEPOLIA_CHAIN_ID, contracts } from "../constants";
 import type {
   IBatchCreateWithDeltas,
   IBatchCreateWithDurations,
   IBatchCreateWithMilestones,
   IBatchCreateWithRange,
 } from "../types";
-import { SEPOLIA_CHAIN_ID, contracts, ABI } from "../constants";
-import { Contract, ethers } from "ethers";
 
 export default class Periphery {
-  static async doBatchCreateLinearWithDurationsRaw(
-    signer: ethers.Signer,
-    payload: IBatchCreateWithDurations
-  ) {
-    const contract_batch = new Contract(
-      contracts[SEPOLIA_CHAIN_ID].SablierV2Batch,
-      ABI.SablierV2Batch.abi,
-      signer
-    );
+  static async doBatchCreateLinearWithDurationsRaw(signer: ethers.Signer, payload: IBatchCreateWithDurations) {
+    const contract_batch = new Contract(contracts[SEPOLIA_CHAIN_ID].SablierV2Batch, ABI.SablierV2Batch.abi, signer);
 
     const data = _.clone(payload);
     const you = await signer.getAddress();
@@ -36,15 +29,8 @@ export default class Periphery {
     return tx.wait();
   }
 
-  static async doBatchCreateLinearWithRangeRaw(
-    signer: ethers.Signer,
-    payload: IBatchCreateWithRange
-  ) {
-    const contract_batch = new Contract(
-      contracts[SEPOLIA_CHAIN_ID].SablierV2Batch,
-      ABI.SablierV2Batch.abi,
-      signer
-    );
+  static async doBatchCreateLinearWithRangeRaw(signer: ethers.Signer, payload: IBatchCreateWithRange) {
+    const contract_batch = new Contract(contracts[SEPOLIA_CHAIN_ID].SablierV2Batch, ABI.SablierV2Batch.abi, signer);
 
     const data = _.clone(payload);
     const you = await signer.getAddress();
@@ -63,15 +49,8 @@ export default class Periphery {
     return tx.wait();
   }
 
-  static async doBatchCreateDynamicWithMilestonesRaw(
-    signer: ethers.Signer,
-    payload: IBatchCreateWithMilestones
-  ) {
-    const contract_batch = new Contract(
-      contracts[SEPOLIA_CHAIN_ID].SablierV2Batch,
-      ABI.SablierV2Batch.abi,
-      signer
-    );
+  static async doBatchCreateDynamicWithMilestonesRaw(signer: ethers.Signer, payload: IBatchCreateWithMilestones) {
+    const contract_batch = new Contract(contracts[SEPOLIA_CHAIN_ID].SablierV2Batch, ABI.SablierV2Batch.abi, signer);
 
     const data = _.clone(payload);
     const you = await signer.getAddress();
@@ -90,15 +69,8 @@ export default class Periphery {
     return tx.wait();
   }
 
-  static async doBatchCreateDynamicWithDeltasRaw(
-    signer: ethers.Signer,
-    payload: IBatchCreateWithDeltas
-  ) {
-    const contract_batch = new Contract(
-      contracts[SEPOLIA_CHAIN_ID].SablierV2Batch,
-      ABI.SablierV2Batch.abi,
-      signer
-    );
+  static async doBatchCreateDynamicWithDeltasRaw(signer: ethers.Signer, payload: IBatchCreateWithDeltas) {
+    const contract_batch = new Contract(contracts[SEPOLIA_CHAIN_ID].SablierV2Batch, ABI.SablierV2Batch.abi, signer);
 
     const data = _.clone(payload);
     const you = await signer.getAddress();

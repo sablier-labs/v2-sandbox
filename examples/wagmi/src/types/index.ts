@@ -61,7 +61,7 @@ export type ICreateWithDurations = [
   cancelable: boolean,
   transferable: boolean,
   durations: { cliff: ISeconds; total: ISeconds },
-  broker: { account: IAddress; fee: 0n } // TIP: you can set this to your own address to charge a fee
+  broker: { account: IAddress; fee: 0n }, // TIP: you can set this to your own address to charge a fee
 ];
 
 export type ICreateWithRange = [
@@ -72,7 +72,7 @@ export type ICreateWithRange = [
   cancelable: boolean,
   transferable: boolean,
   range: { start: ISeconds; cliff: ISeconds; end: ISeconds },
-  broker: { account: IAddress; fee: 0n } // TIP: you can set this to your own address to charge a fee
+  broker: { account: IAddress; fee: 0n }, // TIP: you can set this to your own address to charge a fee
 ];
 
 export type ISegmentD<T extends number | bigint = bigint> = {
@@ -95,7 +95,7 @@ export type ICreateWithDeltas = [
   totalAmount: IAmountWithDecimals,
   asset: IAddress,
   broker: { account: IAddress; fee: 0n },
-  segments: ISegmentD[]
+  segments: ISegmentD[],
 ];
 
 export type ICreateWithMilestones = [
@@ -107,7 +107,7 @@ export type ICreateWithMilestones = [
   totalAmount: IAmountWithDecimals,
   asset: IAddress,
   broker: { account: IAddress; fee: 0n },
-  segments: ISegmentM[]
+  segments: ISegmentM[],
 ];
 
 /** --------- */
@@ -123,7 +123,7 @@ export type IBatchCreateWithDurations = [
     transferable: boolean;
     durations: { cliff: ISeconds<number>; total: ISeconds<number> };
     broker: { account: IAddress; fee: 0n };
-  }[] // Array of batches
+  }[], // Array of batches
 ];
 
 export type IBatchCreateWithRange = [
@@ -141,7 +141,7 @@ export type IBatchCreateWithRange = [
       end: ISeconds<number>;
     };
     broker: { account: IAddress; fee: 0n };
-  }[] // Array of batches
+  }[], // Array of batches
 ];
 
 export type IBatchCreateWithDeltas = [
@@ -155,7 +155,7 @@ export type IBatchCreateWithDeltas = [
     transferable: boolean;
     segments: ISegmentD<number>[];
     broker: { account: IAddress; fee: 0n };
-  }[] // Array of batches
+  }[], // Array of batches
 ];
 
 export type IBatchCreateWithMilestones = [
@@ -170,5 +170,5 @@ export type IBatchCreateWithMilestones = [
     transferable: boolean;
     segments: ISegmentM<number>[];
     broker: { account: IAddress; fee: 0n };
-  }[] // Array of batches
+  }[], // Array of batches
 ];

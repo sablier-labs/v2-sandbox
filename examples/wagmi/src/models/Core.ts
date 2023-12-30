@@ -1,26 +1,20 @@
-import _ from "lodash";
 import BigNumber from "bignumber.js";
+import _ from "lodash";
+import { zeroAddress } from "viem";
+import { getAccount, readContract, waitForTransaction, writeContract } from "wagmi/actions";
+import { ABI, SEPOLIA_CHAIN_ID, contracts } from "../constants";
 import type {
+  IAddress,
   IAmountWithDecimals,
   IAmountWithDecimals18,
-  ISeconds,
-  ICreateWithDurations,
   ICreateWithDeltas,
+  ICreateWithDurations,
   ICreateWithMilestones,
-  ISegmentD,
   ICreateWithRange,
-  IAddress,
+  ISeconds,
+  ISegmentD,
 } from "../types";
-import { SEPOLIA_CHAIN_ID, contracts, ABI } from "../constants";
-import { zeroAddress } from "viem";
-import {
-  getAccount,
-  readContract,
-  writeContract,
-  waitForTransaction,
-} from "wagmi/actions";
-
-import { expect, erroneous } from "../utils";
+import { erroneous, expect } from "../utils";
 
 export default class Core {
   static async doCreateLinear(
@@ -33,7 +27,7 @@ export default class Core {
       token: string | undefined;
       transferability: boolean;
     },
-    log: (value: string) => void
+    log: (value: string) => void,
   ) {
     try {
       if (
@@ -55,9 +49,7 @@ export default class Core {
 
       /** We use BigNumber to convert float values to decimal padded BigInts */
       const padding = new BigNumber(10).pow(new BigNumber(decimals.toString()));
-      const amount = BigInt(
-        new BigNumber(state.amount).times(padding).toFixed()
-      );
+      const amount = BigInt(new BigNumber(state.amount).times(padding).toFixed());
 
       const sender = await getAccount().address;
       if (!expect(sender, "sender")) {
@@ -66,10 +58,7 @@ export default class Core {
 
       const cliff = (() => {
         try {
-          if (
-            !_.isNil(state.cliff) &&
-            BigInt(state.cliff).toString() === state.cliff
-          ) {
+          if (!_.isNil(state.cliff) && BigInt(state.cliff).toString() === state.cliff) {
             return BigInt(state.cliff);
           }
         } catch (_error) {}
@@ -124,7 +113,7 @@ export default class Core {
       token: string | undefined;
       transferability: boolean;
     },
-    log: (value: string) => void
+    log: (value: string) => void,
   ) {
     try {
       if (
@@ -160,22 +149,16 @@ export default class Core {
           throw new Error("Expected valid segments.");
         }
 
-        const amount: IAmountWithDecimals = BigInt(
-          new BigNumber(segment.amount).times(padding).toFixed()
-        );
+        const amount: IAmountWithDecimals = BigInt(new BigNumber(segment.amount).times(padding).toFixed());
         const delta: ISeconds = BigInt(segment.delta);
-        const exponent: IAmountWithDecimals18 =
-          BigInt(segment.exponent) * 10n ** 18n;
+        const exponent: IAmountWithDecimals18 = BigInt(segment.exponent) * 10n ** 18n;
 
         const result: ISegmentD = { amount, exponent, delta };
 
         return result;
       });
 
-      const amount = segments.reduce(
-        (prev, curr) => prev + (curr?.amount || 0n),
-        0n
-      );
+      const amount = segments.reduce((prev, curr) => prev + (curr?.amount || 0n), 0n);
 
       const payload: ICreateWithDeltas = [
         sender,
@@ -276,9 +259,7 @@ export default class Core {
     return waitForTransaction({ hash: tx.hash });
   }
 
-  static async doCreateDynamicWithMilestonesRaw(
-    payload: ICreateWithMilestones
-  ) {
+  static async doCreateDynamicWithMilestonesRaw(payload: ICreateWithMilestones) {
     const data = _.clone(payload);
     if (data[0].toString() === "<< YOUR CONNECTED ADDRESS AS THE SENDER >>") {
       const sender = await getAccount().address;

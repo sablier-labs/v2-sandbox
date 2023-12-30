@@ -1,9 +1,9 @@
-import _ from "lodash";
-import type { IAddress } from "../types";
-import { SEPOLIA_CHAIN_ID, contracts, ABI } from "../constants";
-import { Contract, ethers } from "ethers";
 import BigNumber from "bignumber.js";
-import { expect, erroneous } from "../utils";
+import { Contract, ethers } from "ethers";
+import _ from "lodash";
+import { ABI, SEPOLIA_CHAIN_ID, contracts } from "../constants";
+import type { IAddress } from "../types";
+import { erroneous, expect } from "../utils";
 
 export default class ERC20 {
   static async doApprove(
@@ -13,7 +13,7 @@ export default class ERC20 {
       amount: string | undefined;
       token: string | undefined;
     },
-    log: (value: string) => void
+    log: (value: string) => void,
   ) {
     try {
       if (!expect(state.amount, "amount") || !expect(state.token, "token")) {
@@ -24,10 +24,7 @@ export default class ERC20 {
       const decimals: bigint = await contract_token.decimals();
       const amount = BigInt(state.amount) * 10n ** decimals;
 
-      const tx = await contract_token.approve.send(
-        contracts[SEPOLIA_CHAIN_ID][spender],
-        amount
-      );
+      const tx = await contract_token.approve.send(contracts[SEPOLIA_CHAIN_ID][spender], amount);
 
       if (tx.hash) {
         log(`Token approval sent to the blockchain with hash: ${tx.hash}.`);

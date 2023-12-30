@@ -1,19 +1,18 @@
+import BigNumber from "bignumber.js";
+import { Contract, ethers } from "ethers";
 import _ from "lodash";
+import { ABI, SEPOLIA_CHAIN_ID, contracts } from "../constants";
 import type {
   IAmountWithDecimals,
   IAmountWithDecimals18,
-  ISeconds,
-  ICreateWithDurations,
   ICreateWithDeltas,
+  ICreateWithDurations,
   ICreateWithMilestones,
-  ISegmentD,
   ICreateWithRange,
+  ISeconds,
+  ISegmentD,
 } from "../types";
-import { SEPOLIA_CHAIN_ID, contracts, ABI } from "../constants";
-
-import { Contract, ethers } from "ethers";
-import BigNumber from "bignumber.js";
-import { expect, erroneous } from "../utils";
+import { erroneous, expect } from "../utils";
 
 export default class Core {
   static async doCreateLinear(
@@ -27,7 +26,7 @@ export default class Core {
       token: string | undefined;
       transferability: boolean;
     },
-    log: (value: string) => void
+    log: (value: string) => void,
   ) {
     try {
       if (
@@ -46,23 +45,18 @@ export default class Core {
 
       /** We use BigNumber to convert float values to decimal padded BigInts */
       const padding = new BigNumber(10).pow(new BigNumber(decimals.toString()));
-      const amount = BigInt(
-        new BigNumber(state.amount).times(padding).toFixed()
-      );
+      const amount = BigInt(new BigNumber(state.amount).times(padding).toFixed());
 
       const sender = await signer.getAddress();
       const contract_lockup = new Contract(
         contracts[SEPOLIA_CHAIN_ID].SablierV2LockupLinear,
         ABI.SablierV2LockupLinear.abi,
-        signer
+        signer,
       );
 
       const cliff = (() => {
         try {
-          if (
-            !_.isNil(state.cliff) &&
-            BigInt(state.cliff).toString() === state.cliff
-          ) {
+          if (!_.isNil(state.cliff) && BigInt(state.cliff).toString() === state.cliff) {
             return BigInt(state.cliff);
           }
         } catch (_error) {}
@@ -112,7 +106,7 @@ export default class Core {
       token: string | undefined;
       transferability: boolean;
     },
-    log: (value: string) => void
+    log: (value: string) => void,
   ) {
     try {
       if (
@@ -139,12 +133,9 @@ export default class Core {
           throw new Error("Expected valid segments.");
         }
 
-        const amount: IAmountWithDecimals = BigInt(
-          new BigNumber(segment.amount).times(padding).toFixed()
-        );
+        const amount: IAmountWithDecimals = BigInt(new BigNumber(segment.amount).times(padding).toFixed());
         const delta: ISeconds = BigInt(segment.delta);
-        const exponent: IAmountWithDecimals18 =
-          BigInt(segment.exponent) * 10n ** 18n;
+        const exponent: IAmountWithDecimals18 = BigInt(segment.exponent) * 10n ** 18n;
 
         const result: ISegmentD = [amount, exponent, delta];
 
@@ -155,13 +146,10 @@ export default class Core {
       const contract_lockup = new Contract(
         contracts[SEPOLIA_CHAIN_ID].SablierV2LockupDynamic,
         ABI.SablierV2LockupDynamic.abi,
-        signer
+        signer,
       );
 
-      const amount = segments.reduce(
-        (prev, curr) => prev + (curr?.[0] || 0n),
-        0n
-      );
+      const amount = segments.reduce((prev, curr) => prev + (curr?.[0] || 0n), 0n);
 
       const payload: ICreateWithDeltas = [
         sender,
@@ -193,14 +181,11 @@ export default class Core {
     }
   }
 
-  static async doCreateLinearWithDurationsRaw(
-    signer: ethers.Signer,
-    payload: ICreateWithDurations
-  ) {
+  static async doCreateLinearWithDurationsRaw(signer: ethers.Signer, payload: ICreateWithDurations) {
     const contract_lockup = new Contract(
       contracts[SEPOLIA_CHAIN_ID].SablierV2LockupLinear,
       ABI.SablierV2LockupLinear.abi,
-      signer
+      signer,
     );
 
     const data = _.clone(payload);
@@ -214,14 +199,11 @@ export default class Core {
     return tx.wait();
   }
 
-  static async doCreateLinearWithRangeRaw(
-    signer: ethers.Signer,
-    payload: ICreateWithRange
-  ) {
+  static async doCreateLinearWithRangeRaw(signer: ethers.Signer, payload: ICreateWithRange) {
     const contract_lockup = new Contract(
       contracts[SEPOLIA_CHAIN_ID].SablierV2LockupLinear,
       ABI.SablierV2LockupLinear.abi,
-      signer
+      signer,
     );
 
     const data = _.clone(payload);
@@ -235,14 +217,11 @@ export default class Core {
     return tx.wait();
   }
 
-  static async doCreateDynamicWithDeltasRaw(
-    signer: ethers.Signer,
-    payload: ICreateWithDeltas
-  ) {
+  static async doCreateDynamicWithDeltasRaw(signer: ethers.Signer, payload: ICreateWithDeltas) {
     const contract_lockup = new Contract(
       contracts[SEPOLIA_CHAIN_ID].SablierV2LockupDynamic,
       ABI.SablierV2LockupDynamic.abi,
-      signer
+      signer,
     );
 
     const data = _.clone(payload);
@@ -256,14 +235,11 @@ export default class Core {
     return tx.wait();
   }
 
-  static async doCreateDynamicWithMilestonesRaw(
-    signer: ethers.Signer,
-    payload: ICreateWithMilestones
-  ) {
+  static async doCreateDynamicWithMilestonesRaw(signer: ethers.Signer, payload: ICreateWithMilestones) {
     const contract_lockup = new Contract(
       contracts[SEPOLIA_CHAIN_ID].SablierV2LockupDynamic,
       ABI.SablierV2LockupDynamic.abi,
-      signer
+      signer,
     );
 
     const data = _.clone(payload);

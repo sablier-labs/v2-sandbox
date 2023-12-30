@@ -1,6 +1,6 @@
 /**
  * The official Sablier smart contracts used and recognized by the UI at https://app.sablier.com
- * 
+ *
  * -------------------------------------------------------------------------------------
  *
  * The contracts have been deployed from the following commits:
@@ -14,7 +14,7 @@
  *
  */
 import { IAddress } from "../types";
-import { SEPOLIA_CHAIN_ID  } from "./chains";
+import { SEPOLIA_CHAIN_ID } from "./chains";
 
 export const contracts = {
   [SEPOLIA_CHAIN_ID]: {

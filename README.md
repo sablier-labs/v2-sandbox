@@ -6,17 +6,20 @@ Front-end sandbox development environments for Sablier V2.
 
 ## Background
 
-Sablier is a smart contract protocol that enables trustless streaming of ERC-20 assets, which means
-the ability to make payments by the second.
+Sablier is a smart contract protocol that enables trustless streaming of ERC-20 assets, which means the ability to make
+payments by the second.
 
 There are two types of streaming models in Sablier:
 
 - **LockupLinear**, abbreviated as **LL**, which creates streams with linear streaming functions
-- **LockupDynamic**, abbreviated as **LD**, which creates streams with dynamic streaming functions (examples: exponentials, logarithms, step functions)
+- **LockupDynamic**, abbreviated as **LD**, which creates streams with dynamic streaming functions (examples:
+  exponentials, logarithms, step functions)
 
 For more information, please refer to our [documentation](https://docs.sablier.com).
 
-It is worth noting that you can charge a service fee when creating a stream. This fee is a percentage of the stream's total value and is paid to your designated broker address. Check out the "broker" references in the code to see how this works, as well as this [guide](https://docs.sablier.com/concepts/protocol/fees) from our docs.
+It is worth noting that you can charge a service fee when creating a stream. This fee is a percentage of the stream's
+total value and is paid to your designated broker address. Check out the "broker" references in the code to see how this
+works, as well as this [guide](https://docs.sablier.com/concepts/protocol/fees) from our docs.
 
 ## Environments and Examples
 
@@ -24,7 +27,9 @@ It is worth noting that you can charge a service fee when creating a stream. Thi
 
 ### Ethers V6
 
-An integration of the [Sablier V2 Core](https://github.com/sablier-labs/v2-core) contracts into a frontend environment that uses [Ethers V6](https://docs.ethers.org/v6/). It's a small app that runs on the Sepolia testnet and provides an injected wallet connection out of the box.
+An integration of the [Sablier V2 Core](https://github.com/sablier-labs/v2-core) contracts into a frontend environment
+that uses [Ethers V6](https://docs.ethers.org/v6/). It's a small app that runs on the Sepolia testnet and provides an
+injected wallet connection out of the box.
 
 | Lockup Linear (Form)                       | Lockup Dynamic (Form)                       | Headless                             |
 | ------------------------------------------ | ------------------------------------------- | ------------------------------------ |
@@ -45,17 +50,24 @@ An integration of the [Sablier V2 Core](https://github.com/sablier-labs/v2-core)
 
 **↪ Batch stream creation through Core**
 
-- Create group of LL/LD streams with all possible configurations (4) in headless mode, through a dedicated periphery (SablierV2Batch - Core V2.0)
+- Create group of LL/LD streams with all possible configurations (4) in headless mode, through a dedicated periphery
+  (SablierV2Batch - Core V2.0)
 
-Most of the transaction magic happens in [`models/Transaction.ts`](/examples/ethers-v6/src/models/Transaction.ts). Have a look to understand how parameters are formatted (strings to Big Int, padding numbers with decimals, etc.) and sent to the contracts.
+Most of the transaction magic happens in [`models/Transaction.ts`](/examples/ethers-v6/src/models/Transaction.ts). Have
+a look to understand how parameters are formatted (strings to Big Int, padding numbers with decimals, etc.) and sent to
+the contracts.
 
-For the **headless** mode, see [`constants/data.ts`](/examples/ethers-v6/src/constants/data.ts). Here, you'll be able to tweak the parameters to create streams of different values or shapes (segments).
+For the **headless** mode, see [`constants/data.ts`](/examples/ethers-v6/src/constants/data.ts). Here, you'll be able to
+tweak the parameters to create streams of different values or shapes (segments).
 
 #### Next steps
 
-In the UI Forms, you may find `Prefill form` buttons. Clicking on them will add pre-configured data into the fields as an example of what the data should look like.
+In the UI Forms, you may find `Prefill form` buttons. Clicking on them will add pre-configured data into the fields as
+an example of what the data should look like.
 
-After you create a test stream, make sure to connect to our main [app.sablier.com](https://app.sablier.com) interface with your "sender" wallet to see what the stream [actually looks like](https://docs.sablier.com/apps/features#detailed-panels).
+After you create a test stream, make sure to connect to our main [app.sablier.com](https://app.sablier.com) interface
+with your "sender" wallet to see what the stream
+[actually looks like](https://docs.sablier.com/apps/features#detailed-panels).
 
 | Payload (LD with two segments)            | Shape                                      |
 | ----------------------------------------- | ------------------------------------------ |
@@ -67,7 +79,8 @@ After you create a test stream, make sure to connect to our main [app.sablier.co
 
 ### wagmi / viem
 
-The official Sablier interface uses [wagmi](wagmi.sh/) and [viem](https://viem.sh/). Both libraries offer top-notch support (check the docs and their github) and integrate nicely with things like RainbowKit.
+The official Sablier interface uses [wagmi](wagmi.sh/) and [viem](https://viem.sh/). Both libraries offer top-notch
+support (check the docs and their github) and integrate nicely with things like RainbowKit.
 
 #### Features
 
@@ -75,20 +88,29 @@ Same as the ones implemented in the [Ethers V6](#ethers-v6) sandbox.
 
 #### Opinionated Sandbox
 
-This current sandbox uses [wagmi's react context](https://wagmi.sh/react/getting-started) and configuration to set up the wallet connection (through an Injected Provider / Metamask). It then makes use of [wagmi's core actions](https://wagmi.sh/core/getting-started) to bundle contract interactions under the `Transaction` model.
+This current sandbox uses [wagmi's react context](https://wagmi.sh/react/getting-started) and configuration to set up
+the wallet connection (through an Injected Provider / Metamask). It then makes use of
+[wagmi's core actions](https://wagmi.sh/core/getting-started) to bundle contract interactions under the `Transaction`
+model.
 
-While this helps keep things similar to the way they're implemented in the Ethers V6 Sandbox, keep in mind that you can always choose to implement them differently. For example, using:
+While this helps keep things similar to the way they're implemented in the Ethers V6 Sandbox, keep in mind that you can
+always choose to implement them differently. For example, using:
 
-- Viem, the Typescript library. It's pretty much a 1:1 replacement for ethers (see [migration](https://wagmi.sh/react/ethers-adapters) guide here). The aforementioned `wagmi/actions` (core actions) are more or less a wrapper around viem's utilities, with the additional benefit that the wallet and public clients are automatically sourced behind the scenes (you don't have to pass them manually).
+- Viem, the Typescript library. It's pretty much a 1:1 replacement for ethers (see
+  [migration](https://wagmi.sh/react/ethers-adapters) guide here). The aforementioned `wagmi/actions` (core actions) are
+  more or less a wrapper around viem's utilities, with the additional benefit that the wallet and public clients are
+  automatically sourced behind the scenes (you don't have to pass them manually).
 - Wagmi's hooks, for a more effect oriented React application
 
 ## Specialized Branches
 
-This repository houses a few specialized branches. Outside of `main`, these other branches are used for non-general use-cases, experiments or customer-support.
+This repository houses a few specialized branches. Outside of `main`, these other branches are used for non-general
+use-cases, experiments or customer-support.
 
 #### feat/permit2
 
-The [`feat/permit2`](https://github.com/sablier-labs/v2-sandbox/tree/feat/permit2) branch showcases **a create linear stream flow** using:
+The [`feat/permit2`](https://github.com/sablier-labs/v2-sandbox/tree/feat/permit2) branch showcases **a create linear
+stream flow** using:
 
 - Permit2 signatures
 - The PRB Proxy

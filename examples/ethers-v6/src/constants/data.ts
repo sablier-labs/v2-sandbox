@@ -1,16 +1,15 @@
 import type {
-  IBatchCreateWithRange,
-  IBatchCreateWithDurations,
   IBatchCreateWithDeltas,
+  IBatchCreateWithDurations,
   IBatchCreateWithMilestones,
-  ICreateWithRange,
-  ICreateWithDurations,
+  IBatchCreateWithRange,
   ICreateWithDeltas,
+  ICreateWithDurations,
   ICreateWithMilestones,
+  ICreateWithRange,
 } from "../types";
-
-import { SEPOLIA_CHAIN_ID  } from "./chains";
-import { contracts, SEPOLIA_DAI } from "./contracts";
+import { SEPOLIA_CHAIN_ID } from "./chains";
+import { SEPOLIA_DAI, contracts } from "./contracts";
 
 const now = BigInt(new Date().valueOf().toString().slice(0, -3));
 
@@ -144,43 +143,42 @@ export const BATCH_LOCKUP_LINEAR_WITH_RANGE: IBatchCreateWithRange = [
   ],
 ];
 
-export const BATCH_LOCKUP_DYNAMIC_WITH_MILESTONES: IBatchCreateWithMilestones =
+export const BATCH_LOCKUP_DYNAMIC_WITH_MILESTONES: IBatchCreateWithMilestones = [
+  contracts[SEPOLIA_CHAIN_ID].SablierV2LockupDynamic,
+  SEPOLIA_DAI,
   [
-    contracts[SEPOLIA_CHAIN_ID].SablierV2LockupDynamic,
-    SEPOLIA_DAI,
     [
+      "<< YOUR CONNECTED ADDRESS AS THE SENDER >>", // Sender address
+      "0xCAFE000000000000000000000000000000000000", // Recipient address
+      now, // August 25th, 2023 21:46:40 GMT
+      1000n * 10n ** 18n, // 1000 SEPOLIA_DAI (18 decimals)
+      true, // Cancelable
+      true, // Transferable
       [
-        "<< YOUR CONNECTED ADDRESS AS THE SENDER >>", // Sender address
-        "0xCAFE000000000000000000000000000000000000", // Recipient address
-        now, // August 25th, 2023 21:46:40 GMT
-        1000n * 10n ** 18n, // 1000 SEPOLIA_DAI (18 decimals)
-        true, // Cancelable
-        true, // Transferable
-        [
-          [250n * 10n ** 18n, 3n * 10n ** 18n, now + 86400n * 1n], // Distribute SEPOLIA_DAI 250 exponentially (exponent = 3), by the end of the first day
-          [750n * 10n ** 18n, 3n * 10n ** 18n, now + 86400n * 30n], // Distribute another SEPOLIA_DAI 750 exponentially (exponent = 3), by the end of the month (30 days)
-        ],
-        ["0x0000000000000000000000000000000000000000", 0n], // Broker - set this to your own address to charge a fee
+        [250n * 10n ** 18n, 3n * 10n ** 18n, now + 86400n * 1n], // Distribute SEPOLIA_DAI 250 exponentially (exponent = 3), by the end of the first day
+        [750n * 10n ** 18n, 3n * 10n ** 18n, now + 86400n * 30n], // Distribute another SEPOLIA_DAI 750 exponentially (exponent = 3), by the end of the month (30 days)
       ],
-      [
-        "<< YOUR CONNECTED ADDRESS AS THE SENDER >>", // Sender address
-        "0xCAFE000000000000000000000000000000000000", // Recipient address
-        now, // August 25th, 2023 21:46:40 GMT
-        2000n * 10n ** 18n, // 1000 SEPOLIA_DAI (18 decimals)
-        true, // Cancelable
-        true, // Transferable
-        [
-          [1250n * 10n ** 18n, 3n * 10n ** 18n, now + 86400n * 1n], // Distribute SEPOLIA_DAI 1250 exponentially (exponent = 3), by the end of the first day
-          [750n * 10n ** 18n, 3n * 10n ** 18n, now + 86400n * 30n], // Distribute another SEPOLIA_DAI 750 exponentially (exponent = 3), by the end of the month (30 days)
-        ],
-        ["0x0000000000000000000000000000000000000000", 0n], // Broker - set this to your own address to charge a fee
-      ],
+      ["0x0000000000000000000000000000000000000000", 0n], // Broker - set this to your own address to charge a fee
     ],
-  ];
+    [
+      "<< YOUR CONNECTED ADDRESS AS THE SENDER >>", // Sender address
+      "0xCAFE000000000000000000000000000000000000", // Recipient address
+      now, // August 25th, 2023 21:46:40 GMT
+      2000n * 10n ** 18n, // 1000 SEPOLIA_DAI (18 decimals)
+      true, // Cancelable
+      true, // Transferable
+      [
+        [1250n * 10n ** 18n, 3n * 10n ** 18n, now + 86400n * 1n], // Distribute SEPOLIA_DAI 1250 exponentially (exponent = 3), by the end of the first day
+        [750n * 10n ** 18n, 3n * 10n ** 18n, now + 86400n * 30n], // Distribute another SEPOLIA_DAI 750 exponentially (exponent = 3), by the end of the month (30 days)
+      ],
+      ["0x0000000000000000000000000000000000000000", 0n], // Broker - set this to your own address to charge a fee
+    ],
+  ],
+];
 
 /** 🚨🕣 The END DATE (last parameter in the range tuple) has to be in the future. Make sure to move it at least a few hours after the current moment */
 export const BATCH_LOCKUP_DYNAMIC_WITH_DELTAS: IBatchCreateWithDeltas = [
-    contracts[SEPOLIA_CHAIN_ID].SablierV2LockupDynamic,
+  contracts[SEPOLIA_CHAIN_ID].SablierV2LockupDynamic,
   SEPOLIA_DAI,
   [
     [

@@ -9,7 +9,10 @@
   "bugs": {
     "url": "https://github.com/sablier-labs/v2-sandbox/issues"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "prettier": "^3.1.1"
+  },
   "homepage": "https://github.com/sablier-labs/v2-sandbox#readme",
   "license": "LGPL-3.0",
   "private": true,
@@ -17,5 +20,8 @@
     "type": "git",
     "url": "https://github.com/sablier-labs/v2-sandbox.git"
   },
-  "scripts": {}
+  "scripts": {
+    "prettier-check": "prettier --check \"**/*.{js,json,md,ts,yml}\"",
+    "prettier-write": "prettier --write \"**/*.{js,json,md,ts,yml}\""
+  }
 }

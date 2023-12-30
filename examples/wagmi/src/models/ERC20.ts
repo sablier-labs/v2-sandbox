@@ -1,14 +1,9 @@
-import _ from "lodash";
-import type { IAddress } from "../types";
-import { SEPOLIA_CHAIN_ID, contracts, ABI } from "../constants";
-import {
-  getAccount,
-  readContract,
-  writeContract,
-  waitForTransaction,
-} from "wagmi/actions";
 import BigNumber from "bignumber.js";
-import { expect, erroneous } from "../utils";
+import _ from "lodash";
+import { getAccount, readContract, waitForTransaction, writeContract } from "wagmi/actions";
+import { ABI, SEPOLIA_CHAIN_ID, contracts } from "../constants";
+import type { IAddress } from "../types";
+import { erroneous, expect } from "../utils";
 
 export default class ERC20 {
   static async doApprove(
@@ -17,7 +12,7 @@ export default class ERC20 {
       amount: string | undefined;
       token: string | undefined;
     },
-    log: (value: string) => void
+    log: (value: string) => void,
   ) {
     try {
       if (!expect(state.amount, "amount") || !expect(state.token, "token")) {

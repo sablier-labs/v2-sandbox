@@ -1,18 +1,16 @@
 import _ from "lodash";
+import { getAccount, waitForTransaction, writeContract } from "wagmi/actions";
+import { ABI, SEPOLIA_CHAIN_ID, contracts } from "../constants";
 import type {
   IBatchCreateWithDeltas,
   IBatchCreateWithDurations,
   IBatchCreateWithMilestones,
   IBatchCreateWithRange,
 } from "../types";
-import { SEPOLIA_CHAIN_ID, contracts, ABI } from "../constants";
-import { getAccount, writeContract, waitForTransaction } from "wagmi/actions";
 import { expect } from "../utils";
 
 export default class Periphery {
-  static async doBatchCreateLinearWithDurationsRaw(
-    payload: IBatchCreateWithDurations
-  ) {
+  static async doBatchCreateLinearWithDurationsRaw(payload: IBatchCreateWithDurations) {
     const data = _.clone(payload);
     const you = await getAccount().address;
 
@@ -21,10 +19,7 @@ export default class Periphery {
     }
 
     data[2].map((_item, index) => {
-      if (
-        data[2][index].sender.toString() ===
-        "<< YOUR CONNECTED ADDRESS AS THE SENDER >>"
-      ) {
+      if (data[2][index].sender.toString() === "<< YOUR CONNECTED ADDRESS AS THE SENDER >>") {
         data[2][index].sender = you;
       }
     });
@@ -48,10 +43,7 @@ export default class Periphery {
       return;
     }
     data[2].map((_item, index) => {
-      if (
-        data[2][index].sender.toString() ===
-        "<< YOUR CONNECTED ADDRESS AS THE SENDER >>"
-      ) {
+      if (data[2][index].sender.toString() === "<< YOUR CONNECTED ADDRESS AS THE SENDER >>") {
         data[2][index].sender = you;
       }
     });
@@ -67,9 +59,7 @@ export default class Periphery {
     return waitForTransaction({ hash: tx.hash });
   }
 
-  static async doBatchCreateDynamicWithMilestonesRaw(
-    payload: IBatchCreateWithMilestones
-  ) {
+  static async doBatchCreateDynamicWithMilestonesRaw(payload: IBatchCreateWithMilestones) {
     const data = _.clone(payload);
     const you = await getAccount().address;
 
@@ -77,10 +67,7 @@ export default class Periphery {
       return;
     }
     data[2].map((_item, index) => {
-      if (
-        data[2][index].sender.toString() ===
-        "<< YOUR CONNECTED ADDRESS AS THE SENDER >>"
-      ) {
+      if (data[2][index].sender.toString() === "<< YOUR CONNECTED ADDRESS AS THE SENDER >>") {
         data[2][index].sender = you;
       }
     });
@@ -96,9 +83,7 @@ export default class Periphery {
     return waitForTransaction({ hash: tx.hash });
   }
 
-  static async doBatchCreateDynamicWithDeltasRaw(
-    payload: IBatchCreateWithDeltas
-  ) {
+  static async doBatchCreateDynamicWithDeltasRaw(payload: IBatchCreateWithDeltas) {
     const data = _.clone(payload);
     const you = await getAccount().address;
 
@@ -106,10 +91,7 @@ export default class Periphery {
       return;
     }
     data[2].map((_item, index) => {
-      if (
-        data[2][index].sender.toString() ===
-        "<< YOUR CONNECTED ADDRESS AS THE SENDER >>"
-      ) {
+      if (data[2][index].sender.toString() === "<< YOUR CONNECTED ADDRESS AS THE SENDER >>") {
         data[2][index].sender = you;
       }
     });
