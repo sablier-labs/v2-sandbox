@@ -23,5 +23,8 @@
   "scripts": {
     "prettier-check": "prettier --check \"**/*.{js,json,md,ts,yml}\"",
     "prettier-write": "prettier --write \"**/*.{js,json,md,ts,yml}\""
-  }
+  },
+  "workspaces": [
+    "examples/*"
+  ]
 }
