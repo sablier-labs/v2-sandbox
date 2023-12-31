@@ -1,6 +1,9 @@
 # directories
-**/.next
-**/node_modules
+.next
+.vercel
+build
+dist
+node_modules
 
 # files
 *.env
@@ -8,9 +11,8 @@
 *.tsbuildinfo
 .DS_Store
 .pnp.*
-bun.lockb
 next-env.d.ts
-npm-debug.log
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
